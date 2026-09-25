@@ -135,8 +135,8 @@ class FilmTest(unittest.TestCase):
 		out = Path(tempfile.mkdtemp()) / 'clip.gif'
 		try:
 			F.gif(self.film, out, start=10.0, end=10.5, fps=10, width=480)
-			im = Image.open(out)
-			self.assertEqual((im.size, im.n_frames), ((480, 270), 5))
+			with Image.open(out) as im:  # close it before cleanup: Windows can't delete open files
+				self.assertEqual((im.size, im.n_frames), ((480, 270), 5))
 		finally:
 			shutil.rmtree(out.parent)
 

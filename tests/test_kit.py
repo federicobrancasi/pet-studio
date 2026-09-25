@@ -129,6 +129,17 @@ class FilmTest(unittest.TestCase):
 		finally:
 			shutil.rmtree(out.parent)
 
+	def test_gif_is_rendered_from_the_film(self) -> None:
+		from PIL import Image
+
+		out = Path(tempfile.mkdtemp()) / 'clip.gif'
+		try:
+			F.gif(self.film, out, start=10.0, end=10.5, fps=10, width=480)
+			im = Image.open(out)
+			self.assertEqual((im.size, im.n_frames), ((480, 270), 5))
+		finally:
+			shutil.rmtree(out.parent)
+
 	def test_score_is_deterministic(self) -> None:
 		mixer = A.Mixer(2.0)
 		mixer.melody([(0, 0.5, 'C5'), (0.5, 0.5, 'E5')])

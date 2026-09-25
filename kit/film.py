@@ -151,6 +151,24 @@ def export(film: Film, out: str | Path | None = None, preset: str = 'x', start: 
 	return out
 
 
+def gif(film: Film, out: str | Path | None = None, start: float = 0.0, end: float | None = None, fps: float = 20, width: int = 960) -> Path:
+	"""A looping GIF rendered straight from the film, not from the MP4, so every frame is exact.
+	It is downscaled by a whole number (``width`` is rounded to the nearest one) to stay sharp."""
+	end = film.duration if end is None else min(end, film.duration)
+	w, h = film.size
+	k = max(1, round(w / width))
+	size = (w // k, h // k)
+	count = max(1, int(round((end - start) * fps)))
+
+	def frames():
+		for n in range(count):
+			img = film.render(start + n / fps)
+			yield img if k == 1 else img.resize(size, Image.NEAREST)
+
+	out = Path(out) if out else film.out_dir() / f'{film.name}-{start:g}-{end:g}s.gif'
+	return media.frames_to_gif(frames, size, fps, out)
+
+
 def still(film: Film, t: float, out: str | Path | None = None) -> Path:
 	out = Path(out) if out else film.out_dir() / f'{film.name}-{t:06.2f}s.png'
 	out.parent.mkdir(parents=True, exist_ok=True)

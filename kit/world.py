@@ -1,4 +1,4 @@
-"""Coding World building blocks: the code-city backdrop, code-line platforms, the chat
+"""Scene building blocks: the code-city backdrop, code-line platforms, the chat
 input, a VS Code terminal panel and pixel titles.
 
 World coordinates are screen pixels in a long horizontal world; pass the camera's top-left
@@ -228,7 +228,8 @@ CLOUD_COLOR = hexc('#191f30')
 
 
 class CodeCity:
-	"""The Coding World backdrop. ``seed=0`` reproduces the Coding World film exactly.
+	"""A night skyline of editor windows. Each ``seed`` gives a different city (the coding-world
+	example uses ``seed=0``).
 
 	``moon`` is the moon's top-left corner in screen pixels (None hides it). Stars fill the
 	top ``star_band`` pixels (default: the top 52% of the frame).

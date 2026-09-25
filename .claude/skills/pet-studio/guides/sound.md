@@ -1,62 +1,58 @@
 # Sound
 
-Films have an original chiptune score and sound effects, written as code in `score(mix)`.
-Never use copyrighted music or samples.
+Films get an original chiptune score and sound effects, written as code in `score(mix)`. Don't
+use copyrighted music or samples.
 
-## Levels and balance
-
-| Part | Gain in `mix.put` / `mix.melody` |
+| Part | Gain |
 | --- | --- |
-| lead melody (`lead`) | 0.10-0.16 |
-| bass (`bass`, already an octave up for phone speakers) | 0.24-0.26 |
+| lead melody | 0.10-0.16 |
+| bass (already an octave up, so phone speakers can play it) | 0.24-0.26 |
 | plucks, arpeggios | 0.03-0.09 |
-| bells, music box | 0.05-0.10 |
+| bells | 0.05-0.10 |
 | drums (`groove`, `roll`) | built in; use `soft=0.6-1.0` |
-| sound effects | 0.08-0.30; the big hit of the film up to 0.45 |
+| sound effects | 0.08-0.30; up to 0.45 for the one big hit |
 
-Mastering soft-clips and normalizes the whole mix to about -15 LUFS with a true peak near -2 dBTP
-after AAC encoding, so overall gain in `score()` does not matter: balance does. Keep the melody on
-top of the bass. To change the master, set `MASTER` at the top of the film, for example
-`MASTER = {'ceiling': 0.7}` (quieter, lower peak), `{'drive': 1.2}` (less squashed) or
-`{'fade_out': 1.0}` (a longer fade at the end).
+The mastering step normalizes the mix to about -15 LUFS with a true peak around -2 dBTP. Overall
+gain doesn't matter, but the balance does: keep the melody above the bass. To change the master,
+set `MASTER` in the film, for example `{'ceiling': 0.7}` (quieter), `{'drive': 1.2}` (less
+squashed) or `{'fade_out': 1.0}` (a longer fade).
 
-## Write music for the picture
+## Music for the picture
 
-- 120 BPM: one beat = 0.5 s, one bar (4 beats) = 2 s. `mix.beat(b)` converts beats to seconds.
-  Put scene changes on bar lines and big actions on beats.
-- Give each section its own texture: a music-box lullaby while the pet sleeps, a bouncy theme
-  on hops, a minor-key tiptoe line for tension, a fanfare for success, a sweet slow melody for
-  hearts, and a final major chord on the end card.
-- `mix.melody([(beat, length_beats, 'C5'), ...], start_beat, 'lead' | 'bell' | 'pluck', gain)`.
-  Chords and progressions: see `music()` in `examples/coding-world/film.py`.
-- Silence and space are allowed. Don't fill every beat.
+- At 120 BPM, a beat is 0.5 s and a bar is 2 s. `mix.beat(b)` converts beats to seconds. Put
+  scene changes on bar lines and big actions on beats.
+- Give each section its own texture:
+  - a lullaby for sleep
+  - a bouncy theme for hops
+  - a minor-key tiptoe for tension
+  - a fanfare for success
+  - a slow melody for hearts
+  - a final major chord at the end
+- Write melodies with `mix.melody([(beat, length, 'C5'), ...], start_beat, 'lead' | 'bell' | 'pluck', gain)`.
+  For chords, see `music()` in `examples/coding-world/film.py`.
+- Leave room for silence.
 
-## Sound effects follow the timeline
+## Effects on the timeline
 
-Read the same timing constants the picture uses, so they can never drift:
+Reuse the picture's timing constants so sound and picture never drift apart:
 
 ```python
 for h in HOPS:
-    mix.put(A.boing(), h.t0, 0.16)      # take-off
-    mix.put(A.land(), h.t1, 0.30)       # landing
-for i, ch in enumerate(PROMPT):
-    if ch != ' ':
-        mix.put(A.click(1.0 + 0.06 * (i % 4)), T_KEYS0 + i * T_KEY_STEP, 0.18, pan=-0.3)
+    mix.put(A.boing(), h.t0, 0.16)
+    mix.put(A.land(), h.t1, 0.30)
 ```
 
-Available: `click`, `boing`, `land`, `coin`, `blip(note)`, `sweep(f0, f1, dur)`, `whoosh`, `uh_oh`,
-`bonk`, `twinkle([notes])`, `firework()` (returns whistle and boom), `spring`,
-`noise_burst`, and the instruments `lead`, `pluck`, `bass`, `bell`, `kick`, `snare`, `hat`,
-`crash`. Pan effects toward where things happen on screen (`pan` from -1 to 1).
+**Effects:** `click`, `boing`, `land`, `coin`, `blip`, `sweep`, `whoosh`, `uh_oh`, `bonk`,
+`twinkle`, `firework`, `spring`, `noise_burst`.
+**Instruments:** `lead`, `pluck`, `bass`, `bell`, `kick`, `snare`, `hat`, `crash`.
+Pan toward the action with `pan` from -1 to 1.
 
 ## Checking
 
-You cannot listen, so measure:
+You can't listen to it, so measure instead:
+- `python3 -m kit film audio <name>` prints the loudness.
+- The review's `audio.png` shows every cue marked on the spectrogram. Check that each hit lands
+  on its cue, that no section is empty by mistake, and that nothing clips.
+- If the true peak is above -1 dBTP, set `MASTER = {'ceiling': 0.7}`.
 
-- `python3 -m kit film audio <name>` writes the WAV and prints loudness.
-- The review package's `audio.png` shows a spectrogram and waveform with every cue marked.
-  Check that hits line up with cues, that no section is empty by accident, and that nothing
-  clips.
-- The review report flags a true peak above -1 dBTP; if so, set `MASTER = {'ceiling': 0.7}`.
-
-When you deliver, say that the audio was checked by measurement, not by ear.
+When you deliver, tell the user the audio was checked by measurement, not by ear.

@@ -1,6 +1,6 @@
 """Layout for pet images that must work at every preset size.
 
-:func:`poster` draws the classic composition: the Coding World backdrop, a headline, a
+:func:`poster` draws the classic composition: the code-city backdrop, a headline, a
 line of code and one or more pets standing on it. It picks a layout from the aspect
 ratio, so the same still looks right as an X post, a square, a 4K wallpaper, a phone
 lock screen and a wide X header::

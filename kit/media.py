@@ -10,7 +10,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Callable, Iterable, Sequence
 
 import numpy as np
 from PIL import Image
@@ -210,7 +210,7 @@ def _palette_source(frames: Sequence[Image.Image]) -> Image.Image:
 
 
 def video_to_gif(video: str | Path, path: str | Path, start: float, duration: float, fps: int = 20, width: int = 960) -> Path:
-	"""A crisp looping GIF (or APNG for ``.png``) clip of a video, for Slack or README previews."""
+	"""A looping GIF (or APNG for ``.png``) clip of an existing video file."""
 	path = Path(path)
 	path.parent.mkdir(parents=True, exist_ok=True)
 	vf = f'fps={fps},scale={width}:-2:flags=neighbor'
@@ -219,4 +219,33 @@ def video_to_gif(video: str | Path, path: str | Path, start: float, duration: fl
 		run(['-loglevel', 'error', '-y', '-ss', f'{start:.3f}', '-t', f'{duration:.3f}', '-i', str(video), '-filter_complex', filters, '-loop', '0', str(path)], check=True)
 	else:
 		run(['-loglevel', 'error', '-y', '-ss', f'{start:.3f}', '-t', f'{duration:.3f}', '-i', str(video), '-vf', vf, '-plays', '0', '-f', 'apng', str(path)], check=True)
+	return path
+
+
+def frames_to_gif(make_frames: Callable[[], Iterable[Image.Image]], size: tuple[int, int], fps: float, path: str | Path) -> Path:
+	"""Encodes frames as a looping GIF with one shared 256-color palette and no dithering.
+
+	It takes two passes (palette, then encode), so ``make_frames`` is called twice and must
+	return a fresh iterator of same-size images each time.
+	"""
+	path = Path(path)
+	path.parent.mkdir(parents=True, exist_ok=True)
+	w, h = size
+	source = ['-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{w}x{h}', '-r', f'{fps:g}', '-i', '-']
+	palette = path.with_name(path.stem + '.palette.png')
+	passes = [
+		[*source, '-vf', 'palettegen=max_colors=256:stats_mode=full', '-update', '1', str(palette)],
+		[*source, '-i', str(palette), '-lavfi', '[0:v][1:v]paletteuse=dither=none:diff_mode=rectangle', '-loop', '0', str(path)],
+	]
+	try:
+		for args in passes:
+			proc = subprocess.Popen([ffmpeg_exe(), '-hide_banner', '-loglevel', 'error', '-y', *args], stdin=subprocess.PIPE)
+			for frame in make_frames():
+				proc.stdin.write(frame.convert('RGB').tobytes())
+			proc.stdin.close()
+			if proc.wait():
+				raise RuntimeError(f'ffmpeg failed while writing {path}')
+	finally:
+		if palette.exists():
+			palette.unlink()
 	return path

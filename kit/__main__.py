@@ -113,7 +113,9 @@ def cmd_film(args: argparse.Namespace) -> int:
 	if args.action == 'gif' and target.suffix.lower() in ('.mp4', '.mov'):
 		from . import media
 		out = Path(args.out) if args.out else target.with_suffix('.gif')
-		print(media.video_to_gif(target, out, args.start, args.end - args.start, args.fps, args.width))
+		start = args.start or 0.0
+		end = args.end if args.end is not None else media.probe(target).get('duration', 0.0)
+		print(media.video_to_gif(target, out, start, end - start, args.fps, args.width))
 		return 0
 	film = F.load(target)
 	if args.action == 'frame':
@@ -150,14 +152,7 @@ def cmd_film(args: argparse.Namespace) -> int:
 		print(f'Review package: {folder}')
 		return 0
 	if args.action == 'gif':
-		from . import media
-		mp4 = film.out_dir() / f'{film.name}.mp4'
-		if not mp4.exists():
-			mp4 = film.out_dir() / f'{film.name}-draft.mp4'
-		if not mp4.exists():
-			mp4 = F.export(film, None, 'draft')
-		out = Path(args.out) if args.out else film.out_dir() / f'{film.name}-{args.start:g}-{args.end:g}s.gif'
-		print(media.video_to_gif(mp4, out, args.start, args.end - args.start, args.fps, args.width))
+		print(F.gif(film, args.out, args.start or 0.0, args.end, args.fps, args.width))
 		return 0
 	raise SystemExit(f'unknown film action {args.action}')
 
@@ -301,8 +296,8 @@ def main(argv: list[str] | None = None) -> int:
 	p.add_argument('--draft', action='store_true', help='fast low-quality encode')
 	p.add_argument('--reuse', action='store_true', help='review: reuse the existing MP4')
 	p.add_argument('--film', help='review of an .mp4: film.py to read CUES from')
-	p.add_argument('--fps', type=int, default=20, help='gif: frames per second')
-	p.add_argument('--width', type=int, default=960, help='gif: width in px')
+	p.add_argument('--fps', type=float, default=20, help='gif: frames per second (default 20)')
+	p.add_argument('--width', type=int, default=960, help='gif: width in px, rounded to a whole-number downscale (default 960)')
 	p.add_argument('--out')
 	p.set_defaults(func=cmd_film)
 
@@ -331,8 +326,6 @@ def main(argv: list[str] | None = None) -> int:
 		except (AttributeError, ValueError):
 			pass
 	args = parser.parse_args(argv)
-	if args.command == 'film' and args.action == 'gif' and (args.start is None or args.end is None):
-		parser.error('film gif needs --from and --to')
 	if args.command == 'move' and args.action == 'new':
 		state, _, frame = args.source.partition(':')
 		if frame and not frame.isdigit():

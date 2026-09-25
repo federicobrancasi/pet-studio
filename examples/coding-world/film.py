@@ -1,9 +1,8 @@
 """Coding World: a 30 second one-shot of the VS Code pet fixing a bug and shipping code.
 
-The first film made with this kit, signed off by Claude Opus 5.5 for posting on X. It is a
-good map of the kit: a follow camera (``motion.FollowCamera``), real pet states and hops
-(``pet``, ``motion.hop_pose``), code-line platforms and the chat input (``world``), effects
-(``fx``) and a chiptune score with synced sound effects (``audio``).
+A complete example that uses most of the kit: a follow camera (``motion.FollowCamera``), real
+pet states and hops (``pet``, ``motion.hop_pose``), code-line platforms and the chat input
+(``world``), effects (``fx``) and a chiptune score with synced sound effects (``audio``).
 
     python3 -m kit film render coding-world
 """

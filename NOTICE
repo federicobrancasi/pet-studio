@@ -1,0 +1,55 @@
+Pet Studio for Visual Studio Code
+=================================
+
+This is a personal fan project by Federico Brancasi. It is not an official Microsoft or
+Visual Studio Code project, and it is not supported by Microsoft. It works with the VS Code
+pet, an experimental feature of Visual Studio Code.
+
+Visual Studio Code, VS Code and the Visual Studio Code icon are trademarks of Microsoft
+Corporation. They are used here only to refer to the product the pet lives in.
+
+
+The VS Code pet artwork
+-----------------------
+
+The pet's artwork belongs to Microsoft and is published in the microsoft/vscode repository
+under the MIT License reproduced below.
+
+- The original sprite files are not stored in this repository. `python3 -m kit doctor`
+  downloads them from microsoft/vscode at the commit pinned in kit/sprites.json:
+  https://github.com/microsoft/vscode/tree/9c8b8c2bfda213a859cfd5beffb1c0f2724690ed/src/vs/workbench/contrib/chat/browser/widget/media/chatPet
+- Several files in this repository are derived from that artwork: the images and animations
+  in docs/media/ and moves/*/ (previews and vscode/ sprite sheets), and the pet's body as
+  copied into the grids of moves/*/move.txt. Anything you render with the kit is derived from
+  it too. Microsoft's copyright and license below apply to that artwork; the changes made in
+  this repository are released under this repository's MIT License (LICENSE).
+
+MIT License (microsoft/vscode, LICENSE.txt at the pinned commit)
+
+Copyright (c) 2015 - present Microsoft Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+Everything else
+---------------
+
+The kit, skill, guides, examples, move files, previews and the original chiptune music in
+this repository are Copyright (c) 2026 Federico Brancasi, released under the MIT License in
+LICENSE, except for the Microsoft artwork described above.

@@ -1,0 +1,72 @@
+{
+	"name": "lgtm",
+	"about": "Approves your pull request with a hop and a green check.",
+	"loop": false,
+	"frameWidth": 96,
+	"frameHeight": 128,
+	"frameDurations": [
+		150,
+		90,
+		90,
+		120,
+		160,
+		100,
+		100,
+		500,
+		120,
+		200
+	],
+	"staticFrame": 7,
+	"fixedOrientationBounds": [
+		null,
+		null,
+		null,
+		[
+			40,
+			8,
+			72,
+			32
+		],
+		[
+			24,
+			0,
+			80,
+			32
+		],
+		[
+			24,
+			0,
+			80,
+			32
+		],
+		[
+			24,
+			0,
+			88,
+			32
+		],
+		[
+			16,
+			0,
+			80,
+			32
+		],
+		[
+			40,
+			8,
+			72,
+			32
+		],
+		null
+	],
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-lgtm-stable-128.spritesheet.png",
+			"static": "buddy-lgtm-stable-128.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-lgtm-insiders-128.spritesheet.png",
+			"static": "buddy-lgtm-insiders-128.png"
+		}
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"name": "wave",
+	"about": "Waves hello with its right antenna.",
+	"loop": true,
+	"frameWidth": 96,
+	"frameHeight": 96,
+	"frameDurations": [
+		200,
+		110,
+		130,
+		110,
+		130,
+		110,
+		560
+	],
+	"staticFrame": 6,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-wave-stable-96.spritesheet.png",
+			"static": "buddy-wave-stable-96.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-wave-insiders-96.spritesheet.png",
+			"static": "buddy-wave-insiders-96.png"
+		}
+	}
+}

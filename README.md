@@ -6,7 +6,7 @@ Studio Code chat input) by asking an AI agent.
 ![Coding World: a 30-second film made with this kit](docs/media/coding-world.gif)
 
 *Coding World: 30 seconds, one shot, made from a one-line brief.
-[Download the MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.0) ·
+[Download the MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.1) ·
 [how it's built](examples/coding-world/)*
 
 > A personal fan project, not an official Microsoft or Visual Studio Code project. The pet is an

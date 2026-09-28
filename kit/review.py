@@ -7,7 +7,9 @@
 * ``cue-*.png``       full-resolution frames at every story cue
 * ``strip-*.png``     12 fps strips around every cue, to judge motion and timing
 * ``audio.png``       spectrogram and waveform with the cues marked
-* ``report.md``       file specs, X upload checks, loudness and true peak
+* ``safe-zones.png``  vertical videos only: cue frames with the parts that Reels, TikTok and
+                      Shorts cover shaded
+* ``report.md``       file specs, X upload checks (and vertical checks), loudness and true peak
 
 Every image comes from the encoded file, so it shows exactly what viewers will get.
 """
@@ -94,6 +96,35 @@ def strips(video: Path, folder: Path, cues: Sequence[tuple[float, str]], duratio
 	return paths
 
 
+def safe_zones(video: Path, folder: Path, cues: Sequence[tuple[float, str]], duration: float, cols: int = 6, width: int = 270) -> Path:
+	"""Frames of a vertical video, at every cue (or every 3 s without cues), with the parts that
+	Reels, TikTok and Shorts cover shaded red: text and faces belong in the clear box."""
+	from .layout import safe_area
+
+	v = media.probe(video)['video']
+	k = width / v['width']
+	th = int(round(v['height'] * k))
+	x0, y0, x1, y1 = (int(round(c * k)) for c in safe_area((v['width'], v['height'])))
+	shade = Image.new('RGBA', (width, th), (230, 60, 60, 110))
+	shade.paste((0, 0, 0, 0), (x0, y0, x1, y1))
+	moments = list(cues) or [(i * 3.0, '') for i in range(int(duration // 3) + 1)]
+	rows = (len(moments) + cols - 1) // cols
+	sheet = Image.new('RGB', (cols * (width + 6) + 6, rows * (th + 28) + 36), BG)
+	_label(sheet, 6, 8, 'shaded: covered by Reels, TikTok and Shorts buttons and captions')
+	for i, (t, label) in enumerate(moments):
+		t = min(max(t, 0.0), max(0.0, duration - 0.02))
+		im = media.frame_at(video, t).resize((width, th), Image.BILINEAR).convert('RGBA')
+		im.alpha_composite(shade)
+		ImageDraw.Draw(im).rectangle((x0, y0, x1 - 1, y1 - 1), outline=(255, 220, 90, 255))
+		x = 6 + (i % cols) * (width + 6)
+		y = 36 + (i // cols) * (th + 28)
+		sheet.paste(im.convert('RGB'), (x, y + 22))
+		_label(sheet, x + 2, y + 2, f'{t:05.2f}s {label}'[:20])
+	path = folder / 'safe-zones.png'
+	sheet.save(path)
+	return path
+
+
 def spectrogram(samples: np.ndarray, path: Path, duration: float, cues: Sequence[tuple[float, str]], width: int = 2000, height: int = 320, rate: int = 48000) -> Path:
 	img = Image.new('RGB', (width, height + 230), BG)
 	if len(samples) >= 4096:
@@ -148,22 +179,28 @@ def build(video: str | Path, cues: Sequence[tuple[float, str]] = (), folder: str
 	video = Path(video)
 	folder = Path(folder) if folder else video.parent / 'review'
 	folder.mkdir(parents=True, exist_ok=True)
-	for pattern in ('contact-*.png', 'cue-*.png', 'strip-*.png', 'audio.png', 'report.md', 'report.json'):
+	for pattern in ('contact-*.png', 'cue-*.png', 'strip-*.png', 'audio.png', 'safe-zones.png', 'report.md', 'report.json'):
 		for old in folder.glob(pattern):  # only the files a previous review wrote
 			old.unlink()
 	info = media.probe(video)
 	duration = info.get('duration', 0.0)
 	cues = [(t, label) for (t, label) in cues if 0 <= t < duration]
-	sheets = contact_sheets(video, folder)
+	portrait = media.is_portrait(info)
+	# Vertical frames get narrower tiles in longer rows, so the sheets stay a readable size.
+	sheets = contact_sheets(video, folder, cols=10, width=216) if portrait else contact_sheets(video, folder)
 	keys = cue_frames(video, folder, cues, duration)
-	dense = strips(video, folder, cues, duration)
+	dense = strips(video, folder, cues, duration, cols=12, width=180) if portrait else strips(video, folder, cues, duration)
+	zones = [safe_zones(video, folder, cues, duration)] if portrait else []
 	audio_png = None
 	loud = {'lufs': None, 'true_peak_db': None}
 	if info.get('audio'):
 		audio_png = spectrogram(media.decode_audio(video), folder / 'audio.png', duration, cues)
 		loud = A.loudness(video)
 	checks = media.x_checks(info)
+	vertical = media.vertical_checks(info) if portrait else []
 	report = {'video': str(video), 'specs': info, 'loudness': loud, 'x_checks': [{'check': n, 'ok': ok, 'detail': d} for (n, ok, d) in checks], 'cues': cues}
+	if portrait:
+		report['vertical_checks'] = [{'check': n, 'ok': ok, 'detail': d} for (n, ok, d) in vertical]
 	if determinism is not None:
 		report['determinism'] = determinism
 	(folder / 'report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
@@ -178,10 +215,14 @@ def build(video: str | Path, cues: Sequence[tuple[float, str]] = (), folder: str
 		lines.append(f"- **Determinism:** {'OK' if determinism.get('ok') else 'FAILED'} ({determinism.get('frames_checked')} frames re-rendered in a different order)")
 	lines += ['', '## X upload checks', '']
 	lines += [f"- {'PASS' if ok else 'FAIL'} {name}: {detail}" for (name, ok, detail) in checks]
+	if portrait:
+		lines += ['', '## Vertical checks (Reels, TikTok, Shorts)', '']
+		lines += [f"- {'PASS' if ok else 'FAIL'} {name}: {detail}" for (name, ok, detail) in vertical]
+		lines.append('- LOOK at `safe-zones.png`: text and faces must stay out of the shaded areas')
 	if loud['true_peak_db'] is not None and loud['true_peak_db'] > -1.0:
 		lines.append(f"- WARN true peak {loud['true_peak_db']} dBTP is above -1 dBTP; lower the master ceiling")
 	lines += ['', '## Files', '']
-	lines += [f'- `{p.name}`' for p in [*sheets, *keys, *dense] + ([audio_png] if audio_png else [])]
+	lines += [f'- `{p.name}`' for p in [*sheets, *keys, *dense, *zones] + ([audio_png] if audio_png else [])]
 	lines += ['', '## Cues', '']
 	lines += [f'- {t:6.2f}s  {label}' for (t, label) in cues] or ['- (none: add CUES to the film)']
 	(folder / 'report.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')

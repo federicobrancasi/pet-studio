@@ -1,0 +1,31 @@
+{
+	"name": "ship-it",
+	"about": "A little rocket fires up in front of it and blasts off; the pet follows it with its eyes and cheers.",
+	"loop": false,
+	"frameWidth": 192,
+	"frameHeight": 192,
+	"frameDurations": [
+		150,
+		250,
+		120,
+		90,
+		90,
+		80,
+		80,
+		110,
+		160,
+		200
+	],
+	"staticFrame": 4,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-ship-it-stable-192.spritesheet.png",
+			"static": "buddy-ship-it-stable-192.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-ship-it-insiders-192.spritesheet.png",
+			"static": "buddy-ship-it-insiders-192.png"
+		}
+	}
+}

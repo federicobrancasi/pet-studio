@@ -16,12 +16,13 @@ pet sprites in `kit.pet`.
 
 | The user wants | Guide | Start with | Deliver |
 | --- | --- | --- | --- |
-| a video or GIF | [video](guides/video.md) + [sound](guides/sound.md) | `python3 -m kit film new <name>` | `out/<name>/<name>.mp4` + review package |
+| a video or GIF | [video](guides/video.md) + [sound](guides/sound.md) | `python3 -m kit film new <name>` (`--vertical` for 9:16) | `out/<name>/<name>.mp4` + review package |
 | an image | [image](guides/image.md) | `python3 -m kit still new <name>` | PNGs in `out/<name>/` |
 | a new move | [move](guides/move.md) | `python3 -m kit move new <name>` | `moves/<name>/` sprites + previews |
 
 For combined requests ("teach it to juggle, then film it"), build the move first, then load it in
-the film with `moves.use('<name>')`.
+the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such as `cowboy`,
+`debug`, `trophy` and `angry` (`python3 -m kit move list`).
 
 ## Rules
 
@@ -29,14 +30,17 @@ the film with `moves.use('<name>')`.
 - Whole pixels only: integer scales (`scale=2` in films), no smoothing, blur or rotation.
 - Stable is blue, Insiders is green. When two pets are on screen, use one of each.
 - Live eyes are 1x2 logical pixels; aim them with `gaze` and blink on quiet beats.
-- Keep it friendly: no violence and no mockery. A bug gets bonked into a butterfly, not squashed.
+- Keep it friendly and kind: cartoon slapstick is fine (a hammer bonk on a bug, a lightning
+  zap, a GRR!), but nothing cruel, gory or mean-spirited, and no mockery.
 - No Visual Studio Code logo, no product byline, and nothing that looks official (see Brand in
   the style guide).
 
 ## Workflow
 
-1. **Brief.** Pin down the subject, feeling, length and format (16:9 for X by default). If the
-   brief is open, choose a direction and list your assumptions at the end.
+1. **Brief.** Pin down the subject, feeling, length and format: 16:9 for X by default, 9:16 for
+   Reels, TikTok and Shorts (`film new --vertical`, then keep everything in
+   `layout.safe_area`). If the brief is open, choose a direction and list your assumptions at
+   the end.
 2. **Beats.** Put the timeline constants and a `CUES` list at the top of the file. Each beat is an
    action with a visible result, so it reads with the sound off (X autoplays muted).
 3. **Key frame first.** Render the most important frame (`film frame <name> --at 12.3`) and look
@@ -61,11 +65,12 @@ the film with `moves.use('<name>')`.
 | `kit.fx` | dust, sparks, confetti, fireworks, hearts, zzz, stars, speech bubble, `!`, respawn, poof |
 | `kit.art` | ladybug, butterfly, star, heart; new props as letter grids (`draw.grid_sprite`) |
 | `kit.audio` | `Mixer`, chiptune instruments, sound effects, `groove`, `roll` |
-| `kit.layout` | `poster` and `sticker` layouts that adapt to every image preset |
-| `kit.moves` | `use(name)`: a taught move then works like a built-in state |
+| `kit.layout` | `poster` and `sticker` layouts that adapt to every image preset; `safe_area` for vertical video |
+| `kit.moves` | `use(name)`: a move from `moves/` then works like a built-in state; `montage` |
 
 Reuse routines from the examples instead of rewriting them:
 - `examples/coding-world/film.py` is a complete 30 s film.
+- `examples/pet-day/film.py` is a 9:16 reel built from the ready-made moves.
 - `lgtm-poster`, `ship-it` and `sticker-pack` are stills.
 
 ## Code rules

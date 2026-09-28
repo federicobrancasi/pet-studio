@@ -1,0 +1,32 @@
+{
+	"name": "rubber-duck",
+	"about": "A rubber duck plops down in front of it; the pet presses it, it squeaks, and the pet jumps in surprise.",
+	"loop": false,
+	"frameWidth": 192,
+	"frameHeight": 104,
+	"frameDurations": [
+		150,
+		80,
+		90,
+		380,
+		220,
+		170,
+		380,
+		200,
+		380,
+		90,
+		220
+	],
+	"staticFrame": 4,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-rubber-duck-stable-104.spritesheet.png",
+			"static": "buddy-rubber-duck-stable-104.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-rubber-duck-insiders-104.spritesheet.png",
+			"static": "buddy-rubber-duck-insiders-104.png"
+		}
+	}
+}

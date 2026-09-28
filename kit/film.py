@@ -153,10 +153,11 @@ def export(film: Film, out: str | Path | None = None, preset: str = 'x', start: 
 
 def gif(film: Film, out: str | Path | None = None, start: float = 0.0, end: float | None = None, fps: float = 20, width: int = 960) -> Path:
 	"""A looping GIF rendered straight from the film, not from the MP4, so every frame is exact.
-	It is downscaled by a whole number (``width`` is rounded to the nearest one) to stay sharp."""
+	It is downscaled by a whole number to stay sharp: ``width`` is the long side it aims for, so
+	a vertical film gives a vertical GIF."""
 	end = film.duration if end is None else min(end, film.duration)
 	w, h = film.size
-	k = max(1, round(w / width))
+	k = max(1, round(max(w, h) / width))
 	size = (w // k, h // k)
 	count = max(1, int(round((end - start) * fps)))
 

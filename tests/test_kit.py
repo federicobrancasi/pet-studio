@@ -108,6 +108,14 @@ class MovesTest(unittest.TestCase):
 		image, _, _ = P.pet_frame('lgtm', 7, facing='left')
 		self.assertEqual(image.size, (96 * 2, 128 * 2))
 
+	def test_montage_plays_every_move_at_its_own_timing(self) -> None:
+		frames, durations = moves.montage(['yes', 'wave', 'cowboy'], cols=2)
+		yes, wave, cowboy = (moves.load(name) for name in ('yes', 'wave', 'cowboy'))
+		changes = {sum(spec.durations[:i]) for spec in (yes, wave, cowboy) for i in range(len(spec.frames) + 1)}
+		self.assertEqual(len({f.size for f in frames}), 1)
+		self.assertEqual(len(frames), len(changes) + 1)  # plus the idle lead-in
+		self.assertEqual(sum(durations), 500 + max(sum(s.durations) for s in (yes, wave, cowboy)) + 900)
+
 
 class FilmTest(unittest.TestCase):
 	film = F.load(REPO / 'examples' / 'coding-world' / 'film.py')
@@ -149,6 +157,55 @@ class FilmTest(unittest.TestCase):
 		mixer.melody([(0, 0.5, 'C5'), (0.5, 0.5, 'E5')])
 		A.groove(mixer, 0, 4)
 		self.assertEqual(first, mixer.master().tobytes())
+
+
+class VerticalTest(unittest.TestCase):
+	"""9:16 films: the template, the safe area, the review package and GIFs."""
+
+	@classmethod
+	def setUpClass(cls) -> None:
+		cls.folder = Path(tempfile.mkdtemp())
+		template = REPO / '.claude' / 'skills' / 'pet-studio' / 'templates' / 'film-vertical.py'
+		path = cls.folder / 'vertical-smoke' / 'film.py'
+		path.parent.mkdir()
+		path.write_text(template.read_text(encoding='utf-8').replace('{{name}}', 'vertical-smoke'), encoding='utf-8')
+		cls.film = F.load(path)
+
+	@classmethod
+	def tearDownClass(cls) -> None:
+		shutil.rmtree(cls.folder)
+
+	def test_safe_area_leaves_room_for_the_apps(self) -> None:
+		from kit import layout
+
+		self.assertEqual(layout.safe_area((1080, 1920)), (60, 260, 960, 1600))
+		self.assertEqual(layout.safe_area((720, 1280)), (40, 173, 640, 1067))
+		self.assertEqual(layout.safe_area((1920, 1080)), (54, 54, 1866, 1026))
+
+	def test_template_exports_a_clip_that_passes_every_check(self) -> None:
+		from kit import review
+
+		self.assertEqual(self.film.render(0.0).size, (1080, 1920))
+		out = self.folder / 'clip.mp4'
+		F.export(self.film, out, preset='draft', start=2.6, end=3.2, progress=False)
+		info = media.probe(out)
+		failed = [name for (name, ok, _) in media.x_checks(info) + media.vertical_checks(info) if not ok]
+		self.assertEqual(failed, [])
+		folder = review.build(out, [(0.3, 'hop')], folder=self.folder / 'review')
+		self.assertTrue((folder / 'safe-zones.png').exists())
+		self.assertIn('## Vertical checks', (folder / 'report.md').read_text(encoding='utf-8'))
+		from PIL import Image
+
+		with Image.open(folder / 'contact-01.png') as sheet:  # 10 narrow tiles a row
+			self.assertEqual(sheet.width, 10 * (216 + 6) + 6)
+
+	def test_gif_keeps_the_vertical_shape(self) -> None:
+		from PIL import Image
+
+		out = self.folder / 'clip.gif'
+		F.gif(self.film, out, start=3.0, end=3.5, fps=10, width=480)
+		with Image.open(out) as im:
+			self.assertEqual((im.size, im.n_frames), ((270, 480), 5))
 
 
 class StillTest(unittest.TestCase):

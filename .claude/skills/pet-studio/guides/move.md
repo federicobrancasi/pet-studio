@@ -7,7 +7,8 @@ work in films and stills too.
 ## Steps
 
 1. **Design it.** Work out the trigger, the peak pose and the result, and whether it loops or
-   plays once. Aim for 4-10 frames lasting 0.6-2 s.
+   plays once. Aim for 8-13 frames lasting 1.5-3 s. Study the closest ready-made move first
+   (see [Ready-made moves](#ready-made-moves)).
 2. **Start from the real pet.** Never draw the body from memory:
 
    ```sh
@@ -71,13 +72,51 @@ BAACCCCCCCCC
 
 ## Good moves
 
-- Use big, simple shapes. Change as few pixels as possible, and make every frame count:
-  anticipation, peak, settle.
+Draw like the pet's own art:
+
+- **Shade props** with 3 or 4 tones of one color, lit from the upper right: the lightest on the
+  top and right, the base in the middle, a shadow at the bottom and left, and the darkest as
+  the outline, so the prop reads on light and dark backgrounds.
+- **Size props** like the head, 6 to 12 logical pixels, with clean silhouettes: no stray
+  pixels and no dithering.
+- **Hats replace the antennae:** clear the rows above the head and sit the brim on the head
+  top. Held things start at an antenna tip. Floating things keep a row of air above the
+  antennae and stay off the eyes. Things beside the pet start at column 13 to 15.
+- **One short word at most,** in a bold, shaded font (see `yes` and `angry`). Put its letters
+  in `fixed:` so they stay readable when the pet faces left by mirroring.
+
+Animate like the pet's own reactions:
+
 - Start and end on the idle pose so the move doesn't pop in or out.
-- Keep the body in the bottom-left 12 x 12 box, touching the bottom row except in the air. Props go
-  above or to the right.
-- Hold the peak for 200-600 ms, and keep fast frames at 60-120 ms.
-- The pet faces left by mirroring. Put text, checks and notes in `fixed:` so they stay readable.
+- Anticipate (a crouch, 80-150 ms), act, hold the key pose 400-900 ms so people can read it,
+  then settle. Keep fast frames at 60-120 ms.
+- Props and words pop in over 2 or 3 frames (small, big, settled) and leave the same way.
+  Particles fly on arcs and fade.
+- The body reacts: the eyes follow the action, it crouches to take a hit, it hops for joy.
+- Keep the body in the bottom-left 12 x 12 box, touching the bottom row except in the air.
+  Change as few body pixels as possible.
+
+## Ready-made moves
+
+`moves/` has moves designed for the VS Code pet. Use them in films and stills, or study the
+closest one before drawing your own:
+
+| Move | Shows how to |
+| --- | --- |
+| `yes` | pop a word in above the head: small, big, settled |
+| `idea` | hang a prop above the head and light it up |
+| `ship-it` | launch a prop from beside the pet and follow it with the eyes |
+| `cowboy` | wear a hat instead of the antennae, and twirl a lasso with one |
+| `rubber-duck` | squash a prop and react with a hop |
+| `magic` | hold a wand at an antenna tip and burst sparkles on arcs |
+| `trophy` | sweep a shine across a shaded prop |
+| `debug` | swing a held hammer and land a cartoon impact |
+| `coffee` | rise steam and close the eyes in bliss |
+| `zapped` | weather, a flash that recolors the whole body, and x eyes |
+| `angry` | shake, turn red and flash a shaded word |
+| `wave`, `lgtm` | wave an antenna; a check mark over a hop |
+
+`python3 -m kit move montage all` plays them all in one animated grid.
 
 ## Using and sharing
 

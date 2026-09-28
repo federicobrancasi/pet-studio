@@ -1,0 +1,63 @@
+{
+	"name": "yes",
+	"about": "Crouches, jumps for joy, and a big gold YES! pops up above its head.",
+	"loop": false,
+	"frameWidth": 176,
+	"frameHeight": 168,
+	"frameDurations": [
+		150,
+		120,
+		90,
+		90,
+		100,
+		900,
+		90,
+		200
+	],
+	"staticFrame": 5,
+	"fixedOrientationBounds": [
+		null,
+		null,
+		[
+			24,
+			16,
+			136,
+			64
+		],
+		[
+			0,
+			0,
+			176,
+			56
+		],
+		[
+			0,
+			8,
+			176,
+			64
+		],
+		[
+			0,
+			8,
+			176,
+			64
+		],
+		[
+			24,
+			16,
+			136,
+			64
+		],
+		null
+	],
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-yes-stable-168.spritesheet.png",
+			"static": "buddy-yes-stable-168.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-yes-insiders-168.spritesheet.png",
+			"static": "buddy-yes-insiders-168.png"
+		}
+	}
+}

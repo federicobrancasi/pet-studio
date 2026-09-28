@@ -62,7 +62,8 @@ This is an unofficial fan project, so follow https://code.visualstudio.com/brand
 ## Never
 
 - Name the pet, or present fan content as an announcement.
-- Show the pet hurt, sad for long, or unkind.
+- Show the pet really hurt, sad for long, or unkind. Cartoon mishaps it bounces back from,
+  such as a zap or a GRR!, are fine.
 - Use real people, other companies' mascots, or copyrighted characters, music or art.
 - Redraw the body from memory. Start from a real state or from `kit move grid`.
 - Mix baked eyes and live eyes in the same frame.

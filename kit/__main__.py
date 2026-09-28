@@ -83,7 +83,7 @@ def cmd_poses(args: argparse.Namespace) -> int:
 	return 0
 
 
-def _new_from_template(kind: str, name: str) -> Path:
+def _new_from_template(kind: str, name: str, template: str | None = None) -> Path:
 	import re
 
 	if not re.match(r'^[a-z][a-z0-9-]{1,40}$', name):
@@ -93,7 +93,7 @@ def _new_from_template(kind: str, name: str) -> Path:
 	if target.exists():
 		raise SystemExit(f'{target} already exists')
 	folder.mkdir(parents=True, exist_ok=True)
-	text = (TEMPLATES / f'{kind}.py').read_text(encoding='utf-8').replace('{{name}}', name)
+	text = (TEMPLATES / f'{template or kind}.py').read_text(encoding='utf-8').replace('{{name}}', name)
 	target.write_text(text, encoding='utf-8')
 	return target
 
@@ -102,7 +102,7 @@ def cmd_film(args: argparse.Namespace) -> int:
 	from . import film as F
 
 	if args.action == 'new':
-		print(_new_from_template('film', args.target))
+		print(_new_from_template('film', args.target, 'film-vertical' if args.vertical else None))
 		return 0
 	target = Path(args.target)
 	if args.action == 'review' and target.suffix.lower() in ('.mp4', '.mov'):
@@ -169,9 +169,8 @@ def _film_sheet(film, args: argparse.Namespace) -> int:
 	while t < end - 1e-9:
 		times.append(round(t, 4))
 		t += args.every
-	cols = 5
 	w, h = film.size
-	tw = 384
+	cols, tw = (10, 216) if h > w else (5, 384)  # vertical films get narrower tiles in longer rows
 	th = int(h * tw / w)
 	rows = (len(times) + cols - 1) // cols
 	sheet = Image.new('RGBA', (cols * (tw + 6) + 6, rows * (th + 28) + 6), (24, 24, 28, 255))
@@ -236,7 +235,15 @@ def cmd_move(args: argparse.Namespace) -> int:
 		count = P.frame_count(state)
 		if frame and (not frame.isdigit() or not 1 <= int(frame) <= count):
 			raise KitError(f'{state} has frames 1-{count}; got {frame!r}')
-		print(M.grid_text(state, int(frame) - 1 if frame else 0, args.variant))
+		print(M.grid_text(state, int(frame) - 1 if frame else 0, 'stable' if args.variant in (None, 'both') else args.variant))
+		return 0
+	if args.action == 'montage':
+		from .media import save_animation
+		names = M.all_moves() if args.target == 'all' else [name.strip() for name in args.target.split(',') if name.strip()]
+		frames, durations = M.montage(names, args.cols, args.scale, args.variant or 'both')
+		out = Path(args.out) if args.out else OUT_ROOT / 'moves' / 'montage.gif'
+		print(save_animation(frames, durations, out, loop=True))
+		print(f'  {len(names)} moves, {len(frames)} images, {sum(durations) / 1000:.1f} s loop, {frames[0].width}x{frames[0].height}')
 		return 0
 	if args.action == 'list':
 		for name in M.all_moves():
@@ -297,27 +304,31 @@ def main(argv: list[str] | None = None) -> int:
 	p.add_argument('--reuse', action='store_true', help='review: reuse the existing MP4')
 	p.add_argument('--film', help='review of an .mp4: film.py to read CUES from')
 	p.add_argument('--fps', type=float, default=20, help='gif: frames per second (default 20)')
-	p.add_argument('--width', type=int, default=960, help='gif: width in px, rounded to a whole-number downscale (default 960)')
+	p.add_argument('--width', type=int, default=960, help='gif: long side in px, rounded to a whole-number downscale (default 960)')
+	p.add_argument('--vertical', action='store_true', help='new: start from the 9:16 template (1080x1920, for Reels, TikTok and Shorts)')
 	p.add_argument('--out')
 	p.set_defaults(func=cmd_film)
 
 	p = sub.add_parser('still', help='images: new, render, presets')
 	p.add_argument('action', choices=['new', 'render', 'presets'])
 	p.add_argument('target', nargs='?', default='', help='still name (e.g. my-poster, lgtm-poster) or path to still.py')
-	p.add_argument('--preset', help='x-post, square, x-header, wallpaper, phone or sticker')
+	p.add_argument('--preset', help='x-post, square, x-header, wallpaper, phone, story or sticker')
 	p.add_argument('--all', action='store_true', help='render every preset')
 	p.add_argument('--out')
 	p.set_defaults(func=cmd_still)
 
-	p = sub.add_parser('move', help='new moves: new, grid, check, build, list, gallery')
-	p.add_argument('action', choices=['new', 'grid', 'check', 'build', 'list', 'gallery'])
-	p.add_argument('target', nargs='?', default='all', help='move name, folder or move.txt (check/build default to all moves); for grid: state[:frame], e.g. jump:2')
+	p = sub.add_parser('move', help='new moves: new, grid, check, build, list, gallery, montage')
+	p.add_argument('action', choices=['new', 'grid', 'check', 'build', 'list', 'gallery', 'montage'])
+	p.add_argument('target', nargs='?', default='all', help='move name, folder or move.txt (check/build default to all moves); for grid: state[:frame], e.g. jump:2; for montage: all, or names separated by commas')
 	p.add_argument('--from', dest='source', default='idle:1', help='new: real pose to start every frame from, e.g. idle:1')
 	p.add_argument('--frames', type=int, default=4)
 	p.add_argument('--width', type=int, default=12, help='new: frame width in logical px (12 = body only)')
 	p.add_argument('--height', type=int, default=12, help='new: frame height in logical px')
 	p.add_argument('--ms', type=int, default=120, help='new: default frame duration')
-	p.add_argument('--variant', default='stable', choices=['stable', 'insiders'])
+	p.add_argument('--variant', choices=['stable', 'insiders', 'both'], help='grid: colorway (default stable); montage: colorway, or both to alternate (default both)')
+	p.add_argument('--cols', type=int, default=4, help='montage: moves per row')
+	p.add_argument('--scale', type=int, default=1, help='montage: source pixels scale (1 = 8 screen px per pet pixel)')
+	p.add_argument('--out', help='montage: .gif or animated .png (default out/moves/montage.gif)')
 	p.set_defaults(func=cmd_move)
 
 	for stream in (sys.stdout, sys.stderr):  # never crash on characters a console can't show

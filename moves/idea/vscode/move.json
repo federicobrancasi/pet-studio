@@ -1,0 +1,31 @@
+{
+	"name": "idea",
+	"about": "Looks up as a light bulb appears above its head, flickers on, and shines.",
+	"loop": false,
+	"frameWidth": 104,
+	"frameHeight": 192,
+	"frameDurations": [
+		150,
+		260,
+		80,
+		70,
+		110,
+		130,
+		450,
+		350,
+		120,
+		200
+	],
+	"staticFrame": 6,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-idea-stable-192.spritesheet.png",
+			"static": "buddy-idea-stable-192.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-idea-insiders-192.spritesheet.png",
+			"static": "buddy-idea-insiders-192.png"
+		}
+	}
+}

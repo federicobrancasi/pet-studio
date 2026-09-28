@@ -52,7 +52,7 @@ from PIL import Image
 from . import MOVES_ROOT, OUT_ROOT, KitError
 from . import pet as P
 from .draw import blit, hexc
-from .font import draw_text
+from .font import draw_text, text_width
 from .media import save_animation
 
 CELL = 8  # source pixels per logical pixel
@@ -429,6 +429,63 @@ def preview_frames(spec: MoveSpec, scale: int = 2) -> tuple[list, list]:
 	return frames, durations
 
 
+def montage(names: list, cols: int = 4, scale: int = 1, variant: str = 'both') -> tuple[list, list]:
+	"""An animated grid of moves for READMEs and social posts: ``(frames, durations_ms)``.
+
+	Every move plays once on its own chat-input stage, all starting together after a moment of
+	idle; each pet goes back to idle when its move ends, and the grid holds until the longest one
+	has settled. A new image is drawn whenever any tile changes frame, so every move keeps its
+	exact timing. ``variant`` is ``stable``, ``insiders``, or ``both`` to alternate colorways.
+	"""
+	specs = [load(name) for name in names]
+	if not specs:
+		raise MoveError('give at least one move for the montage')
+	cols = max(1, min(cols, len(specs)))
+	tw = max(HOME, *(s.width for s in specs)) * CELL * scale
+	th = max(HOME, *(s.height for s in specs)) * CELL * scale
+	pad, bar, label_px = 16 * scale, 12 * scale, 2 * scale
+	label_h = 9 * label_px + 8 * scale
+	cell_w, cell_h = tw + pad, th + bar + label_h + pad
+	rows = (len(specs) + cols - 1) // cols
+	width, height = pad + cols * cell_w, pad + rows * cell_h
+	lead, hold = 500, 900
+	starts = [[lead + sum(s.durations[:i]) for i in range(len(s.frames))] for s in specs]
+	ends = [lead + sum(s.durations) for s in specs]
+	total = max(ends) + hold
+	events = sorted({0, *ends, *(t for ts in starts for t in ts)})
+	# Both colorways alternate like a checkerboard, so neighbors differ across rows too.
+	variants = [P.VARIANTS[(i % cols + i // cols) % 2] if variant == 'both' else variant for i in range(len(specs))]
+	idle = {v: P.source_frame('idle', 0, v) for v in set(variants)}
+	idle = {v: im.resize((im.width * scale, im.height * scale), Image.NEAREST) for v, im in idle.items()}
+	cache: dict = {}
+
+	def tile(i: int, t: int) -> Image.Image:
+		spec = specs[i]
+		index = None if t < lead or t >= ends[i] else max(k for k, s in enumerate(starts[i]) if s <= t)
+		key = (i, index)
+		if key not in cache:
+			cache[key] = idle[variants[i]] if index is None else frame_image(spec, index, variants[i]).resize((spec.width * CELL * scale, spec.height * CELL * scale), Image.NEAREST)
+		return cache[key]
+
+	frames, durations = [], []
+	for k, t in enumerate(events):
+		im = Image.new('RGBA', (width, height), PREVIEW_BG)
+		for i, spec in enumerate(specs):
+			x0 = pad + (i % cols) * cell_w
+			y0 = pad + (i // cols) * cell_h
+			baseline = y0 + th
+			im.paste(INPUT_EDGE, (x0, baseline, x0 + tw, baseline + bar))
+			im.paste(INPUT_FILL, (x0 + 2 * scale, baseline + 2 * scale, x0 + tw - 2 * scale, baseline + bar))
+			# Centre the move's whole canvas; the idle body sits where the move's body is.
+			left = x0 + (tw - spec.width * CELL * scale) // 2
+			body = tile(i, t)
+			blit(im, body, left, baseline - body.height)
+			draw_text(im, x0 + (tw - text_width(spec.name, label_px)) // 2, baseline + bar + 6 * scale, spec.name, (204, 204, 204, 255), label_px)
+		frames.append(im)
+		durations.append((events[k + 1] if k + 1 < len(events) else total) - t)
+	return frames, durations
+
+
 def strip(spec: MoveSpec, scale: int = 2) -> Image.Image:
 	"""Every frame of both colorways in a row, labelled with its number and duration."""
 	fw, fh = spec.width * CELL * scale, spec.height * CELL * scale
@@ -508,9 +565,9 @@ def gallery() -> Path:
 	lines = [
 		'# Moves gallery',
 		'',
-		'New moves taught to the VS Code pet. Each folder has the move as text (`move.txt`), previews',
-		'and `vscode/` sprite sheets in the exact format VS Code uses. To add yours, see the main',
-		'[README](../README.md#teach-the-pet-a-new-move).',
+		'Moves for the VS Code pet, ready to use in films and images. Each folder has the move as text',
+		'(`move.txt`), previews and `vscode/` sprite sheets in the exact format VS Code uses. To add',
+		'yours, see the main [README](../README.md#teach-the-pet-a-new-move).',
 		'',
 		'| Move | What it does | Preview |',
 		'| --- | --- | --- |',

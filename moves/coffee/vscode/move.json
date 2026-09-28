@@ -1,0 +1,31 @@
+{
+	"name": "coffee",
+	"about": "A steaming mug of coffee appears in front of it; the pet breathes in the aroma and closes its eyes, blissful.",
+	"loop": false,
+	"frameWidth": 184,
+	"frameHeight": 104,
+	"frameDurations": [
+		150,
+		70,
+		260,
+		260,
+		380,
+		380,
+		220,
+		380,
+		220,
+		200
+	],
+	"staticFrame": 4,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-coffee-stable-104.spritesheet.png",
+			"static": "buddy-coffee-stable-104.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-coffee-insiders-104.spritesheet.png",
+			"static": "buddy-coffee-insiders-104.png"
+		}
+	}
+}

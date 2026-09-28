@@ -1,0 +1,34 @@
+{
+	"name": "cowboy",
+	"about": "Puts on a cowboy hat, twirls a lasso over its head with one antenna, throws it, and tips its hat.",
+	"loop": false,
+	"frameWidth": 192,
+	"frameHeight": 168,
+	"frameDurations": [
+		150,
+		70,
+		100,
+		110,
+		110,
+		110,
+		110,
+		110,
+		100,
+		450,
+		320,
+		100,
+		200
+	],
+	"staticFrame": 4,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-cowboy-stable-168.spritesheet.png",
+			"static": "buddy-cowboy-stable-168.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-cowboy-insiders-168.spritesheet.png",
+			"static": "buddy-cowboy-insiders-168.png"
+		}
+	}
+}

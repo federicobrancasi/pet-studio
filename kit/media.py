@@ -24,6 +24,9 @@ PRESETS = {
 # Limits for a standard X (Twitter) video upload (landscape; portrait swaps width and height).
 X_LIMITS = {'max_seconds': 140, 'max_bytes': 512 * 1024 * 1024, 'max_fps': 60, 'max_long_side': 1920, 'max_short_side': 1200}
 
+# What Reels, TikTok and Shorts all accept for a vertical video (X takes it too).
+VERTICAL_SPEC = {'size': (1080, 1920), 'max_fps': 60, 'max_seconds': 180}
+
 
 def ffmpeg_exe() -> str:
 	override = os.environ.get('FFMPEG')
@@ -131,6 +134,23 @@ def x_checks(info: dict) -> list[tuple[str, bool, str]]:
 	return checks
 
 
+def vertical_checks(info: dict) -> list[tuple[str, bool, str]]:
+	"""Checks a probed portrait MP4 against what Reels, TikTok and Shorts all accept (the codec,
+	pixel format and faststart checks are shared with :func:`x_checks`)."""
+	v = info.get('video') or {}
+	size = (v.get('width', 0), v.get('height', 0))
+	return [
+		('9:16 at 1080x1920', size == VERTICAL_SPEC['size'], f'{size[0]}x{size[1]}'),
+		('frame rate', 0 < v.get('fps', 0) <= VERTICAL_SPEC['max_fps'], f"{v.get('fps')} fps"),
+		('length', 0 < info.get('duration', 0) <= VERTICAL_SPEC['max_seconds'], f"{info.get('duration', 0):.2f} s (3 min fits all three)"),
+	]
+
+
+def is_portrait(info: dict) -> bool:
+	v = info.get('video') or {}
+	return v.get('height', 0) > v.get('width', 0)
+
+
 def decode_frames(path: str | Path, fps: float, width: int, start: float = 0.0, duration: float | None = None) -> Iterable[tuple[float, Image.Image]]:
 	"""Yields ``(t, image)`` sampled at ``fps`` from a video, scaled to ``width`` px wide."""
 	info = probe(path)
@@ -146,13 +166,16 @@ def decode_frames(path: str | Path, fps: float, width: int, start: float = 0.0, 
 	proc = subprocess.Popen([ffmpeg_exe(), '-hide_banner', *args], stdout=subprocess.PIPE)
 	size = width * height * 3
 	i = 0
-	while True:
-		buf = proc.stdout.read(size)
-		if len(buf) < size:
-			break
-		yield start + i / fps, Image.frombytes('RGB', (width, height), buf)
-		i += 1
-	proc.wait()
+	try:
+		while True:
+			buf = proc.stdout.read(size)
+			if len(buf) < size:
+				break
+			yield start + i / fps, Image.frombytes('RGB', (width, height), buf)
+			i += 1
+	finally:
+		proc.stdout.close()
+		proc.wait()
 
 
 def frame_at(path: str | Path, t: float) -> Image.Image:
@@ -210,10 +233,12 @@ def _palette_source(frames: Sequence[Image.Image]) -> Image.Image:
 
 
 def video_to_gif(video: str | Path, path: str | Path, start: float, duration: float, fps: int = 20, width: int = 960) -> Path:
-	"""A looping GIF (or APNG for ``.png``) clip of an existing video file."""
+	"""A looping GIF (or APNG for ``.png``) clip of an existing video file. ``width`` is the long
+	side, so a vertical video becomes a vertical GIF of that height."""
 	path = Path(path)
 	path.parent.mkdir(parents=True, exist_ok=True)
-	vf = f'fps={fps},scale={width}:-2:flags=neighbor'
+	scale = f'-2:{width}' if is_portrait(probe(video)) else f'{width}:-2'
+	vf = f'fps={fps},scale={scale}:flags=neighbor'
 	if path.suffix.lower() == '.gif':
 		filters = f'{vf},split[a][b];[a]palettegen=max_colors=255:stats_mode=full[p];[b][p]paletteuse=dither=none'
 		run(['-loglevel', 'error', '-y', '-ss', f'{start:.3f}', '-t', f'{duration:.3f}', '-i', str(video), '-filter_complex', filters, '-loop', '0', str(path)], check=True)

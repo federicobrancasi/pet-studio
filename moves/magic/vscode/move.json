@@ -1,0 +1,32 @@
+{
+	"name": "magic",
+	"about": "Raises a magic wand with its antenna, swishes it, and a shower of colorful stars bursts out.",
+	"loop": false,
+	"frameWidth": 192,
+	"frameHeight": 152,
+	"frameDurations": [
+		150,
+		110,
+		320,
+		80,
+		100,
+		120,
+		460,
+		160,
+		110,
+		140,
+		200
+	],
+	"staticFrame": 6,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-magic-stable-152.spritesheet.png",
+			"static": "buddy-magic-stable-152.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-magic-insiders-152.spritesheet.png",
+			"static": "buddy-magic-insiders-152.png"
+		}
+	}
+}

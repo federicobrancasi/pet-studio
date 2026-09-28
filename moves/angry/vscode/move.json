@@ -1,0 +1,79 @@
+{
+	"name": "angry",
+	"about": "The pet flies into a rage: it shakes, turns deep red, steam blasts from its antennae and GRR! flashes, then it slowly cools down.",
+	"loop": false,
+	"frameWidth": 168,
+	"frameHeight": 192,
+	"frameDurations": [
+		120,
+		100,
+		80,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		70,
+		400,
+		300,
+		300,
+		300,
+		300,
+		200
+	],
+	"staticFrame": 7,
+	"fixedOrientationBounds": [
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		[
+			0,
+			0,
+			168,
+			56
+		],
+		[
+			0,
+			0,
+			168,
+			56
+		],
+		[
+			0,
+			0,
+			168,
+			56
+		],
+		[
+			0,
+			0,
+			168,
+			56
+		],
+		[
+			0,
+			0,
+			168,
+			56
+		],
+		null,
+		null,
+		null,
+		null,
+		null
+	],
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-angry-stable-192.spritesheet.png",
+			"static": "buddy-angry-stable-192.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-angry-insiders-192.spritesheet.png",
+			"static": "buddy-angry-insiders-192.png"
+		}
+	}
+}

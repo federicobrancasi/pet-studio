@@ -231,17 +231,18 @@ class CodeCity:
 	"""A night skyline of editor windows. Each ``seed`` gives a different city (the coding-world
 	example uses ``seed=0``).
 
-	``moon`` is the moon's top-left corner in screen pixels (None hides it). Stars fill the
-	top ``star_band`` pixels (default: the top 52% of the frame).
+	``moon`` is the moon's top-left corner in screen pixels (None hides it; by default it sits
+	near the top-right corner of any frame). Stars fill the top ``star_band`` pixels (default:
+	the top 52% of the frame).
 	"""
 
 	FAR_F = 0.22
 	CLOUD_F = 0.33
 	NEAR_F = 0.48
 
-	def __init__(self, size: tuple[int, int] = (1920, 1080), world_width: int = 10000, seed: int = 0, moon: tuple[int, int] | None = (1744, 24), stars: int = 150, star_band: int | None = None):
+	def __init__(self, size: tuple[int, int] = (1920, 1080), world_width: int = 10000, seed: int = 0, moon: tuple[int, int] | str | None = 'auto', stars: int = 150, star_band: int | None = None):
 		self.w, self.h = size
-		self.moon_at = moon
+		self.moon_at = (self.w - 176, 24) if moon == 'auto' else moon
 		self.sky = _sky(self.w, self.h)
 		self.moon = _moon()
 		self.far = _skyline(int(self.w + world_width * self.FAR_F + 400), 900, 11 + seed, near=False)

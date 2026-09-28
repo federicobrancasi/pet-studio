@@ -11,7 +11,7 @@ python3 -m kit film sheet surf-the-branch
 | Name | Meaning |
 | --- | --- |
 | `DURATION`, `FPS` | length in seconds; 60 fps for X |
-| `SIZE` | `(1920, 1080)` for X, `(1080, 1080)` square, `(1080, 1920)` vertical |
+| `SIZE` | `(1920, 1080)` for X, `(1080, 1080)` square, `(1080, 1920)` vertical (see [Vertical](#vertical-916)) |
 | `render(t)` | a PIL image of `SIZE`, pure in `t` |
 | `score(mix)` | the music and effects ([sound.md](sound.md)) |
 | `CUES` | `[(t, 'beat'), ...]`; each beat gets a frame and a motion strip in the review |
@@ -29,6 +29,31 @@ python3 -m kit film sheet surf-the-branch
   titles clear of heads.
 - **Timing.** At 120 BPM a beat is 0.5 s, so put big actions on beats. Hops take about 0.5 s, and
   reactions need a moment to breathe.
+
+## Vertical (9:16)
+
+For Reels, TikTok, Shorts and phone-first posts on X, start from the vertical template, a
+working 10 s film in which the pet climbs a stack of code lines:
+
+```sh
+python3 -m kit film new my-reel --vertical
+```
+
+- **Safe area.** The apps draw buttons, captions and profile bars over the top 260 px, the
+  bottom 320 px, the left 60 px and the right 120 px of a 1080x1920 frame.
+  `layout.safe_area(SIZE)` returns the box that stays clear, x 60-960 and y 260-1600. Keep
+  text, faces and the action inside it, centered on its middle (x 510).
+- **Hook.** A short caption in the top of the safe area, whole from the first frame. It's the
+  thumbnail, and it reads with the sound off.
+- **Motion.** Tall frames suit climbing, falling and stacking. A `FollowCamera` that tracks
+  `y` keeps the pet in the lower-middle while the world scrolls. Only show the next platform,
+  so the frame stays calm.
+- **Size.** At 1080 px wide, the pet at `scale=2` is a fifth of the screen. Use `scale=3` for
+  close-ups: moves up to 24 logical pixels wide still fit.
+- **Check.** `film review` adds `safe-zones.png`, with the covered parts shaded red, and
+  vertical checks (1080x1920, up to 60 fps, up to 3 min) to the report. `film gif` sizes by
+  the long side, so a vertical film gives a vertical GIF.
+- **Cover.** Render a still at the `story` preset (1080x1920) for the cover.
 
 ## Building blocks
 
@@ -74,4 +99,5 @@ Look for:
 - dead air
 - the camera moving while the viewer should be reading
 
-The final MP4 is 1080p60 H.264 with AAC and faststart, which suits X uploads of up to 140 s.
+The final MP4 is 1080p60 H.264 with AAC and faststart, which suits X uploads of up to 140 s;
+vertical films suit Reels, TikTok and Shorts too.

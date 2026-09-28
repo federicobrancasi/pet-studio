@@ -30,15 +30,22 @@ Code, and ask. The `pet-studio` skill loads by itself.
 | Ask | You get |
 | --- | --- |
 | "Make a 20 s video of the pet surfing a git branch, for X" | an MP4 ready to upload, plus a review package |
+| "Make a vertical reel of the pet's coding day, for Instagram" | a 1080x1920 MP4 with every caption clear of the apps' buttons |
 | "Make a 4K wallpaper of the pet in space" | PNGs for X, square, X header, 4K, phone and sticker |
 | "Teach the pet a new move: it juggles curly braces" | sprite sheets for both colorways, a GIF and a preview |
-| "Put my juggle move in a short video" | moves work inside videos and images too |
+| "Put the cowboy move in a short video" | the ready-made moves, and yours, work inside videos and images too |
 
 ## Examples
 
 **Films.** Every film comes with its beats laid out as a strip:
 
 ![The 12 beats of Coding World, from asleep to happy coding](docs/media/coding-world-story.png)
+
+**Vertical reels.** [`pet-day`](examples/pet-day/): a 30 s, 9:16 reel told with the ready-made
+moves, its captions inside the area that Reels, TikTok and Shorts leave clear
+([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.1)).
+
+<img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet playing one move per beat on the chat input">
 
 **Images.** One file renders every preset:
 
@@ -47,13 +54,12 @@ Code, and ask. The `pet-studio` skill loads by itself.
 | ![Two pets approve a pull request](docs/media/lgtm-poster.png) | ![Two pets in love with a git push](docs/media/ship-it.png) | ![Eight pet reactions as stickers](docs/media/sticker-pack.png) |
 | [`lgtm-poster`](examples/lgtm-poster/still.py): uses a custom move | [`ship-it`](examples/ship-it/still.py): the default layout | [`sticker-pack`](examples/sticker-pack/still.py): real reactions |
 
-**Moves.** A move is a text file, so it can be written in chat and shared anywhere:
+**Moves.** A move is a text file, so it can be written in chat and shared anywhere. The kit
+comes with 13 ready-made moves to use in films and images, or to study before drawing your own:
 
-| [`wave`](moves/wave/move.txt) | [`lgtm`](moves/lgtm/move.txt) |
-| --- | --- |
-| ![wave in both colorways](moves/wave/preview.png) | ![lgtm in both colorways](moves/lgtm/preview.png) |
+![Twelve moves playing at once: yes, idea, ship-it, cowboy, rubber-duck, magic, trophy, debug, coffee, zapped, angry and lgtm](docs/media/moves.gif)
 
-![Every frame of both moves, in Stable and Insiders colors](docs/media/moves-strip.png)
+*Made with `python3 -m kit move montage`. Every move is in the [gallery](moves/README.md).*
 
 ## How it works
 
@@ -70,6 +76,7 @@ Code, and ask. The `pet-studio` skill loads by itself.
   - a frame and a motion strip for every beat
   - an audio spectrogram
   - loudness and X upload checks
+  - for vertical videos, the parts the apps cover, shaded on every beat
 
   The `pet-director` agent reads these and returns `VERDICT: SIGNED OFF` or a list of fixes.
 
@@ -122,9 +129,9 @@ given by name or by path, and output goes to `out/`, which git ignores.
 
 ```sh
 python3 -m kit poses --list                  # every real pet state, with frames and timing
-python3 -m kit film new my-film              # also: sheet, frame --at 3.2, render --draft, review, gif
-python3 -m kit still new my-poster           # then: still render my-poster --all
-python3 -m kit move new my-move              # also: grid jump:3, build, gallery
+python3 -m kit film new my-film              # --vertical for 9:16; also: sheet, frame --at 3.2, render --draft, review, gif
+python3 -m kit still new my-poster           # then: still render my-poster --all (includes the 9:16 story preset)
+python3 -m kit move new my-move              # also: grid jump:3, build, gallery, montage
 ```
 
 Run the tests with `python3 -m unittest discover -s tests -v`. The sprites are pinned to a

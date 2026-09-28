@@ -1,0 +1,34 @@
+{
+	"name": "debug",
+	"about": "A bug crawls up; the pet raises a big hammer with its antenna and smashes it flat, right on top. Bug fixed!",
+	"loop": false,
+	"frameWidth": 192,
+	"frameHeight": 160,
+	"frameDurations": [
+		150,
+		170,
+		170,
+		300,
+		220,
+		90,
+		420,
+		140,
+		110,
+		130,
+		650,
+		90,
+		200
+	],
+	"staticFrame": 5,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-debug-stable-160.spritesheet.png",
+			"static": "buddy-debug-stable-160.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-debug-insiders-160.spritesheet.png",
+			"static": "buddy-debug-insiders-160.png"
+		}
+	}
+}

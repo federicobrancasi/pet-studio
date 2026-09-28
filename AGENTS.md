@@ -20,8 +20,8 @@ python3 -m kit doctor
 | `kit/` | the Python tools (`python3 -m kit --help`) |
 | `.claude/skills/pet-studio/` | the skill, guides and file templates |
 | `.claude/agents/pet-director.md` | the reviewer that signs work off |
-| `examples/` | a complete film (`coding-world`) and stills (`lgtm-poster`, `ship-it`, `sticker-pack`) |
-| `moves/` | taught moves: `move.txt` plus generated sprites and previews |
+| `examples/` | complete films (`coding-world`, 16:9; `pet-day`, a 9:16 reel) and stills (`lgtm-poster`, `ship-it`, `sticker-pack`) |
+| `moves/` | ready-made and taught moves: `move.txt` plus generated sprites and previews |
 | `films/`, `stills/` | new work (created by `kit film new` and `kit still new`) |
 | `out/` | disposable renders, ignored by git |
 | `tests/` | smoke tests: `python3 -m unittest discover -s tests -v` |

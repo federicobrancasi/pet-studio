@@ -26,13 +26,16 @@ request changes that clearly improve the result for the brief.
 2. **Story:** does each beat read without sound (X autoplays muted)? Is the first second a strong
    thumbnail and hook? Any dead spots, rushed beats or confusing moments?
 3. **Composition:** is anything covering faces, antennae or text at an important moment? Is text
-   legible at phone size and on screen long enough? Safe margins? Clutter?
+   legible at phone size and on screen long enough? Safe margins? Clutter? For vertical videos,
+   `safe-zones.png` must show text and faces clear of the shaded areas.
 4. **Craft:** whole pixels only, no smoothing; eyes, gaze and blinks sensible; no popping between
    poses; timing that breathes; a clear ending that holds.
 5. **Sound (films):** do hits line up with the cues on the spectrogram? Balance, no clipping,
    true peak at most -1 dBTP.
-6. **Delivery:** the report's X upload checks and determinism check pass.
-7. **Brand safety:** nothing unkind, violent, political or misleading; no invented name; no other
+6. **Delivery:** the report's X upload checks (and, for vertical videos, the vertical checks)
+   and the determinism check pass.
+7. **Brand safety:** nothing unkind, cruel, gory, political or misleading (cartoon slapstick
+   such as a bonk or a zap is fine); no invented name; no other
    companies' characters or copyrighted material; nothing that looks like an official Microsoft
    announcement.
 

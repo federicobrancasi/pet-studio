@@ -30,6 +30,7 @@ PRESETS = {
 	'x-header': ((1500, 500), 1, 'X profile header (1500x500)'),
 	'wallpaper': ((1920, 1080), 2, '4K desktop wallpaper (3840x2160)'),
 	'phone': ((585, 1266), 2, 'Phone lock screen (1170x2532)'),
+	'story': ((1080, 1920), 1, 'Vertical story, reel cover or thumbnail, 9:16 (1080x1920)'),
 	'sticker': ((512, 512), 1, 'Transparent sticker (512x512); keep the background transparent'),
 }
 

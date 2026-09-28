@@ -26,6 +26,27 @@ from . import pet as P
 from . import world
 from .draw import TP
 
+# Parts of a 1080 x 1920 frame that Reels, TikTok and Shorts cover with their buttons, captions
+# and profile bars: the union of the three apps' 2026 guidance, in pixels.
+VERTICAL_COVERED = {'top': 260, 'bottom': 320, 'left': 60, 'right': 120}
+TITLE_SAFE = 0.05  # other frames keep 5% of the short side clear on every edge
+
+
+def safe_area(size: tuple[int, int]) -> tuple[int, int, int, int]:
+	"""The box ``(x0, y0, x1, y1)`` that stays visible and uncovered on every platform.
+
+	Portrait frames leave room for what Reels, TikTok and Shorts draw over vertical video: on
+	1080 x 1920 that is x 60-960 and y 260-1600, scaled for other portrait sizes. Keep text,
+	faces and the action inside it. Other frames keep a 5% title-safe margin.
+	"""
+	w, h = size
+	if h > w:
+		cover = VERTICAL_COVERED
+		return (round(cover['left'] * w / 1080), round(cover['top'] * h / 1920),
+			w - round(cover['right'] * w / 1080), h - round(cover['bottom'] * h / 1920))
+	margin = round(TITLE_SAFE * min(w, h))
+	return margin, margin, w - margin, h - margin
+
 
 def pick_code(candidates: Sequence[str], max_width: int) -> tuple[str, bool]:
 	"""The first code line that fits (list the longest version first), and whether it keeps

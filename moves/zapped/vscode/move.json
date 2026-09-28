@@ -1,0 +1,35 @@
+{
+	"name": "zapped",
+	"about": "A storm cloud rains on it, lightning strikes, it flashes electrified with X eyes, and ends up charred and smoking.",
+	"loop": false,
+	"frameWidth": 176,
+	"frameHeight": 184,
+	"frameDurations": [
+		150,
+		160,
+		120,
+		120,
+		160,
+		70,
+		70,
+		70,
+		70,
+		90,
+		520,
+		420,
+		150,
+		220
+	],
+	"staticFrame": 5,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-zapped-stable-184.spritesheet.png",
+			"static": "buddy-zapped-stable-184.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-zapped-insiders-184.spritesheet.png",
+			"static": "buddy-zapped-insiders-184.png"
+		}
+	}
+}

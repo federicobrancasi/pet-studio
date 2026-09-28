@@ -20,7 +20,7 @@ python3 -m kit doctor
 | `kit/` | the Python tools (`python3 -m kit --help`) |
 | `.claude/skills/pet-studio/` | the skill, guides and file templates |
 | `.claude/agents/pet-director.md` | the reviewer that signs work off |
-| `examples/` | complete films (`coding-world`, 16:9; `pet-day`, a 9:16 reel) and stills (`lgtm-poster`, `ship-it`, `sticker-pack`) |
+| `examples/` | complete films (`coding-world`, 16:9, in a world of code; `pet-day`, a 9:16 journey through a day outdoors) and stills (`lgtm-poster`, `ship-it`, `sticker-pack`) |
 | `moves/` | ready-made and taught moves: `move.txt` plus generated sprites and previews |
 | `films/`, `stills/` | new work (created by `kit film new` and `kit still new`) |
 | `out/` | disposable renders, ignored by git |
@@ -33,5 +33,7 @@ python3 -m kit doctor
 - `render(t)` is a pure function of time with seeded randomness only; `python3 -m kit film check`
   verifies it.
 - Whole-pixel art only: integer scales, nearest-neighbor, no smoothing.
+- Each film gets a world picked for its brief (code only when the brief is about code), and the
+  pet moves through it. The templates and examples show the mechanics, not a world to copy.
 - Look at every sheet and frame you render before saying something is done, and say what you
   could not check (you cannot hear the audio: read the spectrogram and loudness instead).

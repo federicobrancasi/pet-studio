@@ -39,10 +39,12 @@ the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such
 
 1. **Brief.** Pin down the subject, feeling, length and format: 16:9 for X by default, 9:16 for
    Reels, TikTok and Shorts (`film new --vertical`, then keep everything in
-   `layout.safe_area`). If the brief is open, choose a direction and list your assumptions at
-   the end.
+   `layout.safe_area`). Choose a world that fits the brief, not the one in the template or an
+   example (see Worlds in [guides/video.md](guides/video.md)). If the brief is open, choose a
+   direction and list your assumptions at the end.
 2. **Beats.** Put the timeline constants and a `CUES` list at the top of the file. Each beat is an
-   action with a visible result, so it reads with the sound off (X autoplays muted).
+   action with a visible result, so it reads with the sound off (X autoplays muted). Keep the pet
+   moving through its world, with the camera following, rather than standing in one spot.
 3. **Key frame first.** Render the most important frame (`film frame <name> --at 12.3`) and look
    at it before building the rest.
 4. **Build**, checking as you go with `film sheet <name>` (one frame every 0.5 s), single frames
@@ -61,16 +63,21 @@ the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such
 | --- | --- |
 | `kit.pet` | real states (`poses --list`), `PetPose`, `draw_pose`, `frame_at`, live eyes |
 | `kit.motion` | `Hop` (real crouch, stretch, air and squash poses), `FollowCamera`, `blinking`, `shake` |
-| `kit.world` | `CodeCity` backdrop, `CodeLine` platforms, `chat_input`, `terminal_panel`, `window`, titles |
-| `kit.fx` | dust, sparks, confetti, fireworks, hearts, zzz, stars, speech bubble, `!`, respawn, poof |
+| `kit.world` | `CodeCity` backdrop, `CodeLine` platforms, `chat_input`, `terminal_panel`, `window`, titles; `caption`, `say` (speech bubble) and `panel` for any world |
+| `kit.sky` | skies that follow the clock (`day_keys`, `day_light`) or a climb (`gradient`), sun, moon, stars, `CloudLayer`, `CloudPlatform`, `rays`, `gust`, `speed_lines` |
+| `kit.land` | far hills (`Ridge`), the ground the pet walks along (`Ground`, with biomes), nature props (`prop`), all lit by the time of day |
+| `kit.letters` | `BubbleWord`: big bubble letters that fit, drop in and squash when the pet lands on them |
+| `kit.fx` | dust, sparks, confetti, fireworks, hearts, zzz, stars, speech bubble, `!`, respawn, poof, `flash`, `sparkle_ring` |
 | `kit.art` | ladybug, butterfly, star, heart; new props as letter grids (`draw.grid_sprite`) |
 | `kit.audio` | `Mixer`, chiptune instruments, sound effects, `groove`, `roll` |
 | `kit.layout` | `poster` and `sticker` layouts that adapt to every image preset; `safe_area` for vertical video |
 | `kit.moves` | `use(name)`: a move from `moves/` then works like a built-in state; `montage` |
+| `kit.draw` | pixel helpers, easing, `zoom` (a crisp close-up of a rendered frame) |
 
-Reuse routines from the examples instead of rewriting them:
-- `examples/coding-world/film.py` is a complete 30 s film.
-- `examples/pet-day/film.py` is a 9:16 reel built from the ready-made moves.
+Reuse routines from the examples instead of rewriting them, but not their worlds or beats:
+- `examples/coding-world/film.py` is a complete 30 s film in a world of code.
+- `examples/pet-day/film.py` is a 9:16 reel: the pet travels through its day, from a sunny
+  meadow to a starry night, stopping to play the ready-made moves.
 - `lgtm-poster`, `ship-it` and `sticker-pack` are stills.
 
 ## Code rules

@@ -30,7 +30,7 @@ Code, and ask. The `pet-studio` skill loads by itself.
 | Ask | You get |
 | --- | --- |
 | "Make a 20 s video of the pet surfing a git branch, for X" | an MP4 ready to upload, plus a review package |
-| "Make a vertical reel of the pet's coding day, for Instagram" | a 1080x1920 MP4 with every caption clear of the apps' buttons |
+| "Make a vertical reel of the pet's day at the beach, for Instagram" | a 1080x1920 MP4 with every caption clear of the apps' buttons |
 | "Make a 4K wallpaper of the pet in space" | PNGs for X, square, X header, 4K, phone and sticker |
 | "Teach the pet a new move: it juggles curly braces" | sprite sheets for both colorways, a GIF and a preview |
 | "Put the cowboy move in a short video" | the ready-made moves, and yours, work inside videos and images too |
@@ -41,11 +41,12 @@ Code, and ask. The `pet-studio` skill loads by itself.
 
 ![The 12 beats of Coding World, from asleep to happy coding](docs/media/coding-world-story.png)
 
-**Vertical reels.** [`pet-day`](examples/pet-day/): a 30 s, 9:16 reel told with the ready-made
-moves, its captions inside the area that Reels, TikTok and Shorts leave clear
-([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.1)).
+**Vertical reels.** [`pet-day`](examples/pet-day/): a 33 s, 9:16 reel in which the pet travels
+through its day, from a sunny meadow to a starry night, stopping to play the ready-made moves.
+Its captions stay inside the area that Reels, TikTok and Shorts leave clear
+([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.2)).
 
-<img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet playing one move per beat on the chat input">
+<img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night">
 
 **Images.** One file renders every preset:
 
@@ -66,7 +67,8 @@ comes with 13 ready-made moves to use in films and images, or to study before dr
 - **Skill** ([`.claude/skills/pet-studio/`](.claude/skills/pet-studio/SKILL.md)). This gives
   the agent the pet's rules (the real sprites only, whole pixels, blue Stable and green
   Insiders, no invented name) and a workflow: brief, beats, key frame first, build, review,
-  sign-off.
+  sign-off. Each film gets its own world, picked for its brief: code, a meadow, the clouds, the
+  beach or space.
 - **Kit** (`kit/`, plain Python: Pillow, numpy and ffmpeg).
   - A film is one file: `render(t)` returns the frame at time `t`, and `score(mix)` writes the
     music.

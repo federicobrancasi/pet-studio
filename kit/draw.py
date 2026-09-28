@@ -144,3 +144,18 @@ def catmull(keys: Sequence[tuple], t: float) -> tuple[float, float]:
 
 def wave(t: float, period: float, amplitude: float, phase: float = 0.0) -> float:
 	return math.sin((t / period + phase) * math.tau) * amplitude
+
+
+def zoom(img: Image.Image, x0: int, y0: int, k: int = 2) -> Image.Image:
+	"""A crisp close-up: the ``1/k``-size box at ``(x0, y0)`` of a rendered frame, blown up ``k`` times.
+
+	Nearest neighbor with an integer ``k`` keeps every pixel whole, so a 2x punch-in on a scale-2
+	pet shows it at scale 4. Draw text after zooming, at full resolution.
+	"""
+	w, h = img.size
+	part = img.crop((x0, y0, x0 + w // k, y0 + h // k)).resize((w // k * k, h // k * k), Image.NEAREST)
+	if part.size == img.size:
+		return part
+	out = Image.new(img.mode, img.size)
+	out.paste(part, (0, 0))
+	return out

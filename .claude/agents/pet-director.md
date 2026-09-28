@@ -22,9 +22,13 @@ request changes that clearly improve the result for the brief.
 ## Checklist
 
 1. **Brief:** is it what the user asked for (subject, length, format, tone)? Is it the VS Code
-   pet, unnamed, in its real form and colors? Fun, cute and charming?
+   pet, unnamed, in its real form and colors? Fun, cute and charming? Is the world one the brief
+   calls for (a code world only when the brief is about code), and does the film look like
+   itself rather than like one of the examples or templates?
 2. **Story:** does each beat read without sound (X autoplays muted)? Is the first second a strong
-   thumbnail and hook? Any dead spots, rushed beats or confusing moments?
+   thumbnail and hook? Any dead spots, rushed beats or confusing moments? Does the pet move
+   through its world (travelling, climbing, chasing, with the camera following) rather than
+   standing in one spot the whole time?
 3. **Composition:** is anything covering faces, antennae or text at an important moment? Is text
    legible at phone size and on screen long enough? Safe margins? Clutter? For vertical videos,
    `safe-zones.png` must show text and faces clear of the shaded areas.

@@ -11,6 +11,9 @@ guidelines in microsoft/vscode.
   - It claps when the agent needs you.
   - It sleeps when things are quiet.
   - It celebrates when a response finishes.
+- The chat input is its home, not the only place it can be. In films and images it can go
+  anywhere the brief takes it: a meadow, the clouds, the beach, space, a snowy mountain. Use a
+  code world when the brief is about code, not by default.
 - Call it "the VS Code pet". Don't invent a name or backstory. The pet is experimental and may
   change.
 - Stable is blue and Insiders is green: one character in two colorways. Two pets make good

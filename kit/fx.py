@@ -212,3 +212,39 @@ def poof(img: Image.Image, t: float, t0: float, x: float, y: float, cx: float, c
 			blit(img, im, round(x) - im.width // 2 - cx, y - im.height // 2 - cy)
 			return
 		acc += d
+
+
+GOLD = hexc('#ffd35c')
+
+
+def flash(img: Image.Image, t: float, t0: float, length: float = 0.22, color: tuple = (255, 250, 235)) -> None:
+	"""One full-screen flash at ``t0`` that fades out: good for hiding a cut. Never strobe it."""
+	dt = t - t0
+	if 0 <= dt < length:
+		a = int(235 * (1 - dt / length) ** 1.6)
+		img.alpha_composite(Image.new('RGBA', img.size, color[:3] + (a,)))
+
+
+def sparkle(img: Image.Image, x: float, y: float, size: int, color: tuple = WHITE) -> None:
+	"""A four-point pixel sparkle centered on screen ``(x, y)``, ``size`` px from center to tip."""
+	x, y = snap(x, 4), snap(y, 4)
+	fill_rect(img, x - size, y - 2, size * 2 + 4, 4, color)
+	fill_rect(img, x - 2, y - size, 4, size * 2 + 4, color)
+	fill_rect(img, x - 4, y - 4, 8, 8, WHITE[:3] + (color[3],))
+
+
+def sparkle_ring(img: Image.Image, t: float, t0: float, x: float, y: float, cx: float, cy: float, n: int = 8,
+		radius: float = 150, inner: float = 0.0, life: float = 0.4, color: tuple = GOLD) -> None:
+	"""A ring of sparkles flying out from world ``(x, y)`` at ``t0``, from ``inner`` to ``radius`` px.
+
+	Start ``inner`` outside the pet's face, and draw text on top of it.
+	"""
+	dt = t - t0
+	if not (0 <= dt < life):
+		return
+	k = ease_out(dt / life)
+	for i in range(n):
+		a = i / n * math.tau + 0.3
+		r = inner + (radius - inner) * k
+		sparkle(img, x + math.cos(a) * r - cx, y + math.sin(a) * r - cy, 12 if dt < life * 0.6 else 6,
+			color[:3] + (int(255 * (1 - k * 0.6)),))

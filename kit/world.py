@@ -631,3 +631,85 @@ def window(img: Image.Image, x: int, y: int, w: int, h: int, tab: str = 'untitle
 	fill_rect(img, x + TP, y + TP, tab_w, TP // 2, FOCUS)
 	draw_text(img, x + 4 * TP, y + 3 * TP, tab, hexc('#e7e7e7'), 4)
 	return x + TP, y + 8 * TP, w - 2 * TP, h - 9 * TP
+
+
+# --------------------------------------------------------------------------------------------
+# Captions, panels and speech bubbles for any world
+
+INK = hexc('#14103a')
+
+
+def outlined_text(img: Image.Image, text: str, x: int, y: int, px: int, color: tuple, outline: tuple = INK, width: int | None = None) -> None:
+	"""Text with a solid outline all around (like a caption sticker), readable on any background."""
+	width = width or px // 2
+	for dx in (-width, 0, width):
+		for dy in (-width, 0, width):
+			if dx or dy:
+				draw_text(img, x + dx, y + dy, text, outline, px)
+	draw_text(img, x + width, y + width + px // 2, text, outline, px)
+	draw_text(img, x, y, text, color, px)
+
+
+def panel(img: Image.Image, x0: float, y0: float, x1: float, y1: float, fill: tuple, border: tuple | None = None, cell: int = TP) -> None:
+	"""A pixel panel with its corners cut by one cell, and an optional one-cell ``border``."""
+	x0, y0, x1, y1 = snap(x0, cell), snap(y0, cell), snap(x1, cell), snap(y1, cell)
+	if border is not None:
+		fill_rect(img, x0 + cell, y0, x1 - x0 - 2 * cell, y1 - y0, border)
+		fill_rect(img, x0, y0 + cell, x1 - x0, y1 - y0 - 2 * cell, border)
+		x0, y0, x1, y1 = x0 + cell, y0 + cell, x1 - cell, y1 - cell
+	fill_rect(img, x0 + cell, y0, x1 - x0 - 2 * cell, y1 - y0, fill)
+	fill_rect(img, x0, y0 + cell, x1 - x0, y1 - y0 - 2 * cell, fill)
+
+
+def say(img: Image.Image, text: str, center_x: float, bottom: float, tail_x: float, px: int = TP, reveal: float = 1.0) -> tuple:
+	"""A white speech bubble with ``text`` whose tail hangs below it at ``tail_x`` (screen space).
+
+	``bottom`` is the bubble's bottom edge; the tail adds 3 cells below it, so keep it clear of
+	the pet's antennae. ``reveal`` from 0 to 1 types the text in. Returns the bubble's box.
+	"""
+	cell = TP
+	w = snap(text_width(text, px) + 8 * cell, cell)
+	h = snap(7 * px + 6 * cell, cell)
+	x0, y0 = snap(center_x - w / 2, cell), snap(bottom - h, cell)
+	panel(img, x0, y0, x0 + w, y0 + h, WHITE, INK, cell)
+	tx = snap(tail_x, cell)
+	fill_rect(img, tx, y0 + h - cell, 3 * cell, cell, WHITE)  # open the border where the tail joins
+	for i, wc in enumerate((3, 2, 1)):
+		yy = y0 + h + i * cell
+		fill_rect(img, tx - cell, yy, (wc + 2) * cell, cell, INK)
+		fill_rect(img, tx, yy, wc * cell, cell, WHITE)
+	fill_rect(img, tx - cell, y0 + h + 3 * cell, 2 * cell, cell, INK)
+	shown = text[:max(0, min(len(text), int(round(len(text) * reveal))))]
+	draw_text(img, x0 + 4 * cell, y0 + 3 * cell, shown, INK, px)
+	return x0, y0, x0 + w, y0 + h
+
+
+def _balanced(text: str, px: int, max_width: float) -> list:
+	"""``text`` on one line if it fits, else on two lines split where they're most even."""
+	if text_width(text, px) <= max_width or ' ' not in text:
+		return [text]
+	words = text.split(' ')
+	best = min((max(text_width(' '.join(words[:i]), px), text_width(' '.join(words[i:]), px)), i) for i in range(1, len(words)))
+	return [' '.join(words[:best[1]]), ' '.join(words[best[1]:])]
+
+
+def caption(img: Image.Image, text: str, top: int, center_x: int | None = None, max_width: float | None = None, color: tuple = WHITE,
+		sizes: Sequence[int] = (LP, 12, TP), line_gap: int = 24) -> int:
+	"""An outlined caption, centered: on one line at the largest size in ``sizes`` that fits
+	``max_width``, else on two even lines, else wrapped at the smallest size. Returns the y below
+	it. Use it for hooks and labels over busy or bright backgrounds."""
+	cx = img.width // 2 if center_x is None else center_x
+	max_width = max_width if max_width is not None else img.width - 128
+	px = next((s for s in sizes if text_width(text, s) <= max_width - s), None)
+	lines = [text] if px is not None else None
+	if px is None:
+		px = next((s for s in sizes if all(text_width(line, s) <= max_width - s for line in _balanced(text, s, max_width - s))), None)
+		lines = _balanced(text, px, max_width - px) if px is not None else None
+	if px is None:
+		px = sizes[-1]
+		lines = [line for _, line in wrap_spans(text, px, max_width - px)]
+	y = top
+	for line in lines:
+		outlined_text(img, line, snap(cx - text_width(line, px) / 2, 2), y, px, color)
+		y += 9 * px + line_gap
+	return y - line_gap

@@ -117,6 +117,70 @@ class MovesTest(unittest.TestCase):
 		self.assertEqual(sum(durations), 500 + max(sum(s.durations) for s in (yes, wave, cowboy)) + 900)
 
 
+class WorldsTest(unittest.TestCase):
+	"""Worlds that aren't code: skies, landscapes, bubble letters, captions and the close-up zoom."""
+
+	def test_day_sky_and_light_follow_the_clock(self) -> None:
+		from kit import sky
+
+		brightness = [sum(sky.day_keys(hour)[0][1][:3]) for hour in (5.0, 12.0, 21.0)]
+		self.assertEqual(
+			(brightness[1] > brightness[0], brightness[1] > brightness[2], sky.day_light(12.0)[1], sky.day_light(21.0)[1] > 0.5),
+			(True, True, 0.0, True))
+		self.assertIs(sky.gradient((64, 64), sky.day_keys(9.0)), sky.gradient((64, 64), sky.day_keys(9.01)))
+
+	def test_cloud_platforms_hold_the_pet_on_their_surface(self) -> None:
+		from PIL import Image
+		from kit import sky
+
+		step = sky.CloudPlatform(200, 300, 26, 11, seed=4)
+		img = Image.new('RGBA', (400, 500))
+		step.draw(img, 0, 0)
+		column = [img.getpixel((200, y))[3] for y in range(250, 320, 4)]
+		first_solid = 250 + 4 * next(i for i, a in enumerate(column) if a)
+		self.assertEqual((step.surface(), step.surface(8) > step.surface(), abs(first_solid - (step.top - step.sink)) <= 4), (300, True, True))
+
+	def test_ground_and_props_stand_on_the_surface(self) -> None:
+		from PIL import Image
+		from kit import land
+
+		ground = land.Ground(lambda x: 300 + x / 10, biomes=((0, 'meadow'), (200, 'sand')))
+		img = Image.new('RGBA', (400, 600))
+		ground.draw(img, 0, 0)
+		land.prop(img, 'rock', 300, ground.y(300), 0, 0, cell=12)
+		y = ground.y(6)
+		self.assertEqual((y % 12, img.getpixel((6, y - 13))[3], img.getpixel((6, y + 1))[3], img.getpixel((300, ground.y(300) - 6))[3]), (0, 0, 255, 255))
+
+	def test_bubble_words_fit_and_squash_on_whole_pixels(self) -> None:
+		from kit import letters
+
+		word = letters.BubbleWord('HELLO WORLD', 540, 1000, max_width=880)
+		hits = {0: [1.0]}
+		self.assertEqual(
+			(word.cell in letters.CELLS, word.width <= 880, word.cells(0, 1.0, hits), word.cells(0, 1.5, hits), word.top(0, 1.0, hits) > word.top(0)),
+			(True, True, letters.squash(0.0, word.cell), (word.cell, word.cell), True))
+
+	def test_zoom_keeps_every_pixel_whole(self) -> None:
+		from PIL import Image
+		from kit import draw
+
+		img = Image.new('RGB', (8, 6))
+		img.putpixel((1, 1), (255, 0, 0))
+		big = draw.zoom(img, 0, 0, 2)
+		self.assertEqual((big.size, [big.getpixel(xy) for xy in ((2, 2), (3, 3), (4, 4))]), ((8, 6), [(255, 0, 0), (255, 0, 0), (0, 0, 0)]))
+
+	def test_captions_and_bubbles_stay_inside_the_safe_area(self) -> None:
+		from PIL import Image
+		from kit import layout, world
+
+		img = Image.new('RGBA', (1080, 1920))
+		x0, y0, x1, y1 = layout.safe_area(img.size)
+		box = world.say(img, "HI, I'M HERE!", (x0 + x1) // 2, 900, 500)
+		bottom = world.caption(img, 'a caption long enough that it has to wrap', y0 + 40, (x0 + x1) // 2, x1 - x0)
+		left, top, right, _ = img.getbbox()
+		self.assertEqual((left >= x0 - 12, right <= x1 + 12, top >= y0 + 30, bottom < box[1], box[2] <= x1), (True, True, True, True, True))
+
+
 class FilmTest(unittest.TestCase):
 	film = F.load(REPO / 'examples' / 'coding-world' / 'film.py')
 

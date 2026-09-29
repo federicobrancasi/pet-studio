@@ -9,7 +9,7 @@ moves in [`moves/`](../../moves/README.md).
 
 <img src="../../docs/media/pet-day.gif" width="270" alt="The reel: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night">
 
-- **Watch:** the MP4 (with sound) is on the [v1.4 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4).
+- **Watch:** the MP4 (with sound) is on the [v1.5 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5).
 - **Rebuild:** `python3 -m kit film review pet-day` (the MP4 and its review package, with
   `safe-zones.png`).
 

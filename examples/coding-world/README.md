@@ -5,7 +5,7 @@ app, and celebrates with a friend.
 
 ![Coding World end card](../../docs/media/coding-world-poster.png)
 
-- **Watch:** the MP4 (with sound) is on the [v1.4 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4).
+- **Watch:** the MP4 (with sound) is on the [v1.5 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5).
 - **Rebuild:** `python3 -m kit film render coding-world` (about two minutes).
 
 | Time | Beat |

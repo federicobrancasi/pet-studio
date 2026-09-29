@@ -41,19 +41,16 @@ Code, and ask. The `pet-studio` skill loads by itself.
 
 ![The 12 beats of Coding World, from asleep to happy coding](docs/media/coding-world-story.png)
 
-**Vertical reels.** [`pet-day`](examples/pet-day/): a 35 s, 9:16 reel in which the pet travels
-through its coding day, from a sunny meadow to a starry night: it builds a rocket, fixes a bug,
-survives a merge conflict and ships it, all with the ready-made moves.
-Its captions stay inside the area that Reels, TikTok and Shorts leave clear
-([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4)).
-
-[`boss-fight`](examples/boss-fight/): a 20 s reel that tells "POV: the bug only happens in prod"
-as a retro boss fight. Both pets team up against a giant bug, and it ends on a question for the
-comments ([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4)).
+**Vertical reels.** 9:16 for Reels, TikTok, Shorts and X, with every caption inside the area the
+apps leave clear. Each name links to how it's built, and the MP4s with sound are on the
+[v1.5 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5).
 
 | | |
 | --- | --- |
-| <img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night"> | <img src="docs/media/boss-fight.gif" width="270" alt="Boss fight: a giant bug boss with a health bar over the tiny VS Code pet in a server room; the pet dodges, gets zapped, finds the weak spot with a rubber duck, and stomps the boss with the Insiders pet"> |
+| <img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night"> | <img src="docs/media/blobby.gif" width="270" alt="Blobby, the name reveal: the pet chases a golden envelope up a sunset sky, catches it, and BLOBBY bursts out in big bubble letters; the pet hops along its name and says hello"> |
+| [`pet-day`](examples/pet-day/): a coding day | [`blobby`](examples/blobby/): the name reveal |
+| <img src="docs/media/boss-fight.gif" width="270" alt="Boss fight: a giant bug boss with a health bar over the tiny VS Code pet in a server room; the pet dodges, gets zapped, finds the weak spot with a rubber duck, and stomps the boss with the Insiders pet"> | <img src="docs/media/reflection.gif" width="270" alt="Watch the reflection: at a night pond, the blue pet's reflection moves before it does, glitches green and leaps out of the water: it's the green Insiders pet, in sunglasses"> |
+| [`boss-fight`](examples/boss-fight/): a bug in prod | [`reflection`](examples/reflection/): wait for it |
 
 **Images.** One file renders every preset:
 

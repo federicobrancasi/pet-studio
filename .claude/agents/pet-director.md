@@ -22,9 +22,9 @@ request changes that clearly improve the result for the brief.
 ## Checklist
 
 1. **Brief:** is it what the user asked for (subject, length, format, tone)? Is it the VS Code
-   pet, unnamed, in its real form and colors? Fun, cute and charming? Is the world one the brief
-   calls for (a code world only when the brief is about code), and does the film look like
-   itself rather than like one of the examples or templates?
+   pet (Blobby, never another name) in its real form and colors? Fun, cute and charming? Is the
+   world one the brief calls for (a code world only when the brief is about code), and does the
+   film look like itself rather than like one of the examples or templates?
 2. **Story:** does each beat read without sound (X autoplays muted)? Is the first second a strong
    thumbnail and hook? Any dead spots, rushed beats or confusing moments? Does the pet move
    through its world (travelling, climbing, chasing, with the camera following) rather than
@@ -39,8 +39,8 @@ request changes that clearly improve the result for the brief.
 6. **Delivery:** the report's X upload checks (and, for vertical videos, the vertical checks)
    and the determinism check pass.
 7. **Brand safety:** nothing unkind, cruel, gory, political or misleading (cartoon slapstick
-   such as a bonk or a zap is fine); no invented name; no other
-   companies' characters or copyrighted material; nothing that looks like an official Microsoft
+   such as a bonk or a zap is fine); no invented name (the pet is Blobby); no other companies'
+   characters or copyrighted material; nothing that looks like an official Microsoft
    announcement.
 
 ## Output format (concise)

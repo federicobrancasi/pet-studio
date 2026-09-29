@@ -1,6 +1,6 @@
 ---
 name: pet-studio
-description: Use when the user wants to make anything with the VS Code pet (the pixel mascot above the Visual Studio Code chat input) - videos and films for X or social media, still images (posters, wallpapers, X headers, phone screens, stickers), GIFs, or new moves and animations ("teach the pet to ..."). Covers the whole workflow in this repo - brief, choreography, the kit tools, the review package and the pet-director sign-off.
+description: Use when the user wants to make anything with the VS Code pet, Blobby (the pixel mascot above the Visual Studio Code chat input) - videos and films for X or social media, still images (posters, wallpapers, X headers, phone screens, stickers), GIFs, or new moves and animations ("teach the pet to ..."). Covers the whole workflow in this repo - brief, choreography, the kit tools, the review package and the pet-director sign-off.
 ---
 
 # Pet Studio
@@ -26,7 +26,8 @@ the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such
 
 ## Rules
 
-- Say "the VS Code pet". Never invent a name.
+- Its name is Blobby (the community picked it); "the VS Code pet" works too. Never invent
+  another name.
 - Whole pixels only: integer scales (`scale=2` in films), no smoothing, blur or rotation.
 - Stable is blue, Insiders is green. When two pets are on screen, use one of each.
 - Live eyes are 1x2 logical pixels; aim them with `gaze` and blink on quiet beats.
@@ -76,10 +77,14 @@ the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such
 
 Reuse routines from the examples instead of rewriting them, but not their worlds or beats:
 - `examples/coding-world/film.py` is a complete 30 s film in a world of code.
-- `examples/boss-fight/film.py` is a 9:16 reel told as a retro game: a boss drawn on the pet's
-  grid, a HUD, banners on the beat, and both pets playing together.
 - `examples/pet-day/film.py` is a 9:16 reel: the pet travels through its day, from a sunny
   meadow to a starry night, stopping to play the ready-made moves.
+- `examples/blobby/film.py` is a 9:16 name reveal: a chase up a sunset sky with a camera that
+  follows, a bubble-letter logo the pet hops along one note per letter, and a 2x close-up.
+- `examples/boss-fight/film.py` is a 9:16 reel told as a retro game: a boss drawn on the pet's
+  grid, a HUD, banners on the beat, and both pets playing together.
+- `examples/reflection/film.py` is a 9:16 "wait for it" reel: a pond that mirrors the scene, a
+  reflection that drifts out of sync with the pet, and both pets as two teams.
 - `lgtm-poster`, `ship-it` and `sticker-pack` are stills.
 
 ## Code rules

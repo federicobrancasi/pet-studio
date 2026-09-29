@@ -41,8 +41,9 @@ show the mechanics, not the world to reuse.
 | --- | --- | --- |
 | about code: a bug, a merge, a deploy | a city or a stairway of code | `world.CodeCity`, `world.CodeLine`, `world.terminal_panel` |
 | a day, a trip, a season | a landscape through the hours: meadow, field, desert | `land.Ground` with biomes, `land.Ridge`, `land.prop`, `sky.day_keys`, `sky.day_light` |
-| a big moment, a wish, a reveal | the clouds at sunset, then the stars | `sky.gradient`, `sky.CloudPlatform`, `sky.rays`, `letters.BubbleWord` |
+| a big moment, a wish, a reveal | the clouds at sunset, then the stars | `sky.gradient`, `sky.CloudPlatform`, `sky.rays`, `letters.BubbleWord`; see `examples/blobby` |
 | a dev joke, a challenge, a versus | a retro game: a boss, a HUD, banners and power-ups | see `examples/boss-fight` |
+| a twist, a mystery, a "wait for it" | a night pond whose water mirrors the scene | see `examples/reflection` |
 | anything else | the beach, space, snow, underwater, a candy land, inside a computer | the pieces above, new props as letter grids (`draw.grid_sprite`) |
 
 - **Vary the look.** Choose a palette, a time of day and a way of travelling (hops, a climb, a

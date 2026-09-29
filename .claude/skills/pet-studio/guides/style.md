@@ -14,8 +14,9 @@ guidelines in microsoft/vscode.
 - The chat input is its home, not the only place it can be. In films and images it can go
   anywhere the brief takes it: a meadow, the clouds, the beach, space, a snowy mountain. Use a
   code world when the brief is about code, not by default.
-- Call it "the VS Code pet". Don't invent a name or backstory. The pet is experimental and may
-  change.
+- Its name is Blobby: the community picked it in a naming contest (see `examples/blobby`).
+  "The VS Code pet" works too. Don't invent other names, nicknames or a backstory. The pet is
+  experimental and may change.
 - Stable is blue and Insiders is green: one character in two colorways. Two pets make good
   friends, one of each.
 - It's cheerful, curious and a little clumsy, and never mean.
@@ -64,7 +65,9 @@ This is an unofficial fan project, so follow https://code.visualstudio.com/brand
 
 ## Never
 
-- Name the pet, or present fan content as an announcement.
+- Give the pet another name, a nickname or a backstory, or present fan content as an official
+  announcement. (The `blobby` example celebrates the real naming contest; don't reuse its
+  winner credit or prize.)
 - Show the pet really hurt, sad for long, or unkind. Cartoon mishaps it bounces back from,
   such as a zap or a GRR!, are fine.
 - Use real people, other companies' mascots, or copyrighted characters, music or art.

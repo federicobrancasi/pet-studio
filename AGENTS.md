@@ -30,6 +30,9 @@ python3 -m kit doctor
 
 - The pet always comes from the real sprites via `kit.pet`; never redraw its body from memory.
 - The pet's name is Blobby (the community picked it). Never invent another name or a backstory.
+- The skill and the `pet-director` agent stay in `.claude/`: GitHub Copilot (Visual Studio Code
+  and the CLI) and Claude Code all load them from there. Don't move or copy them to `.github/` or
+  `.agents/`: Claude Code doesn't read those folders, and a second copy would drift.
 - `render(t)` is a pure function of time with seeded randomness only; `python3 -m kit film check`
   verifies it.
 - Whole-pixel art only: integer scales, nearest-neighbor, no smoothing.

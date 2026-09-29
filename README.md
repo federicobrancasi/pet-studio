@@ -1,7 +1,7 @@
 # Pet Studio for Visual Studio Code
 
 Make videos, images and new moves with the **VS Code pet** (the pixel creature above the Visual
-Studio Code chat input) by asking an AI agent.
+Studio Code chat input) by asking an AI agent: GitHub Copilot or Claude Code.
 
 ![Coding World: a 30-second film made with this kit](docs/media/coding-world.gif)
 
@@ -25,7 +25,8 @@ python3 -m kit doctor        # checks the setup and downloads the pet sprites
 ```
 
 Open the folder in Visual Studio Code (Copilot chat, agent mode), GitHub Copilot CLI or Claude
-Code, and ask. The `pet-studio` skill loads by itself.
+Code, and ask. The `pet-studio` skill and its reviewer load by themselves from
+[`.claude/`](.claude/), the one folder all three read.
 
 | Ask | You get |
 | --- | --- |

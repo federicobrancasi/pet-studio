@@ -5,7 +5,7 @@ Run commands from the repository root with ``python3 -m kit <command>``.
 
 from pathlib import Path
 
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 
 class KitError(Exception):
 	"""A problem the kit explains itself (bad name, missing file, invalid move...). The command

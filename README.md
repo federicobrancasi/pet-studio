@@ -41,10 +41,11 @@ Code, and ask. The `pet-studio` skill loads by itself.
 
 ![The 12 beats of Coding World, from asleep to happy coding](docs/media/coding-world-story.png)
 
-**Vertical reels.** [`pet-day`](examples/pet-day/): a 33 s, 9:16 reel in which the pet travels
-through its day, from a sunny meadow to a starry night, stopping to play the ready-made moves.
+**Vertical reels.** [`pet-day`](examples/pet-day/): a 35 s, 9:16 reel in which the pet travels
+through its coding day, from a sunny meadow to a starry night: it builds a rocket, fixes a bug,
+survives a merge conflict and ships it, all with the ready-made moves.
 Its captions stay inside the area that Reels, TikTok and Shorts leave clear
-([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.2)).
+([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.3)).
 
 <img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night">
 
@@ -56,9 +57,9 @@ Its captions stay inside the area that Reels, TikTok and Shorts leave clear
 | [`lgtm-poster`](examples/lgtm-poster/still.py): uses a custom move | [`ship-it`](examples/ship-it/still.py): the default layout | [`sticker-pack`](examples/sticker-pack/still.py): real reactions |
 
 **Moves.** A move is a text file, so it can be written in chat and shared anywhere. The kit
-comes with 13 ready-made moves to use in films and images, or to study before drawing your own:
+comes with 14 ready-made moves to use in films and images, or to study before drawing your own:
 
-![Twelve moves playing at once: yes, idea, ship-it, cowboy, rubber-duck, magic, trophy, debug, coffee, zapped, angry and lgtm](docs/media/moves.gif)
+![Fourteen moves playing at once: yes, idea, build, ship-it, cowboy, rubber-duck, magic, trophy, debug, coffee, zapped, angry, lgtm and wave](docs/media/moves.gif)
 
 *Made with `python3 -m kit move montage`. Every move is in the [gallery](moves/README.md).*
 

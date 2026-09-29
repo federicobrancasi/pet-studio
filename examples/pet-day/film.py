@@ -1,8 +1,9 @@
-"""A day in the life of the VS Code pet: a 33-second vertical (9:16) reel in which the pet travels
-through its day, from a sunny morning to a starry night, stopping to play the moves in moves/.
+"""A day in the life of the VS Code pet: a vertical (9:16) reel in which the pet travels through its
+coding day, from a sunny morning to a starry night, stopping to play the moves in moves/.
 
-It hops from stop to stop across a meadow, a golden field and a desert at sunset, and comes
-home to its chat input to sleep. It shows how to make a journey reel:
+Coffee, an idea, rubber ducking, then it builds a rocket; a bug and a merge conflict get in the
+way, it finally merges, ships the rocket, logs off and goes home to sleep. It hops from stop to
+stop across a meadow, a golden field and a desert at sunset. It shows how to make a journey reel:
 
 * a world that isn't code: ``kit.sky`` for a sky that follows the clock, ``kit.land`` for the
   hills, the ground and the props, all lit by the time of day;
@@ -44,11 +45,12 @@ DAY = [
 	('09:00', 'coffee first', 'coffee', 0),
 	('09:30', 'a wild idea', 'idea', 2),
 	('10:00', 'rubber ducking', 'rubber-duck', 1),
-	('11:00', 'found the bug', 'debug', 2),
-	('12:00', 'merge conflict', 'zapped', 1),
-	('14:00', 'it works?!', 'magic', 2),
-	('16:00', 'ship it', 'ship-it', 1),
-	('18:00', 'logging off', 'cowboy', 2),
+	('11:00', 'building it', 'build', 2),         # it builds a rocket ...
+	('13:00', 'oh no, a bug!', 'debug', 1),
+	('14:00', 'merge conflict', 'zapped', 1),
+	('15:00', 'finally merged!', 'lgtm', 1),
+	('16:00', 'ship it!', 'ship-it', 2),          # ... and here it blasts off
+	('18:00', 'logging off', 'cowboy', 1),
 ]
 HOME_HOPS = 2        # back home at night, a longer way (so home stays off screen until then)
 HOME_STRIDE = 1000
@@ -176,9 +178,11 @@ SCENERY = [
 	('pine', HOME_X - 280, 24, 0), ('flower_white', HOME_X + 560, 12, 0), ('bush', HOME_X + 700, 24, 1),
 	('tree', _stop_x('idea') - 150, 24, 0), ('flower_pink', _stop_x('idea') + 330, 12, 0), ('flower_violet', _stop_x('idea') + 380, 12, 0),
 	('pond', _stop_x('rubber-duck') + 300, 24, 5), ('rock', _stop_x('rubber-duck') + 580, 24, 1),
+	('rock', _stop_x('build') - 210, 24, 1), ('flower_violet', _stop_x('build') + 500, 12, 0),
 	('bush', _stop_x('debug') - 190, 24, 1), ('flower_pink', _stop_x('debug') + 420, 12, 0), ('flower_white', _stop_x('debug') + 470, 12, 0),
 	('rock', _stop_x('zapped') - 210, 24, 1),
-	('mushroom', _stop_x('magic') - 200, 24, 0), ('mushroom', _stop_x('magic') + 420, 24, 0), ('mushroom', _stop_x('magic') + 520, 12, 0),
+	('bush', _stop_x('lgtm') - 200, 24, 1), ('flower_pink', _stop_x('lgtm') + 300, 12, 0), ('flower_violet', _stop_x('lgtm') + 360, 12, 0),
+	('flower_white', _stop_x('lgtm') + 420, 12, 0),
 	('cactus', _stop_x('ship-it') + 470, 24, 0),
 	('fence', _stop_x('cowboy') - 230, 24, 0), ('fence', _stop_x('cowboy') + 420, 24, 0), ('cactus', _stop_x('cowboy') + 560, 24, 0),
 	('pine', END_X + 500, 24, 0), ('flower_white', END_X - 280, 12, 0),
@@ -213,7 +217,7 @@ def _prop_pops() -> list:
 	"""``(t, x, y)`` where each move's props vanish on its last frames, for a small pop of sparkles."""
 	pops = []
 	for (_, _, _, name, x) in STOPS:
-		if name == 'ship-it':  # its rocket flies off instead
+		if name in ('build', 'ship-it'):  # build pops its rocket itself, and ship-it's flies off
 			continue
 		last = None
 		for f in range(1, P.frame_count(name)):
@@ -309,7 +313,7 @@ def sun_and_moon(img: Image.Image, t: float, hour: float) -> None:
 	if hour < 19.4:
 		u = clamp((hour - 6.5) / 12.5, 0, 1)
 		spr = sky.lit(sky.sun(120, 12, stripes=hour > 16.5), (STORM_SKY, 0.7 * storm(t)))
-		x, y = 700 + 190 * u, 1190 - math.sin(math.pi * u) * 330
+		x, y = 820 + 120 * u, 1230 - math.sin(math.pi * u) * 300  # low on the right, clear of the moves' props
 		blit(img, spr, snap(x - spr.width / 2, 4), snap(y - spr.height / 2, 4))
 	if hour > 18.8:
 		k = seg(hour, 18.8, 21.0)
@@ -337,6 +341,9 @@ def caption(img: Image.Image, t: float) -> None:
 
 ROCKET = _rocket()
 POPS = _prop_pops()
+_B = _props_box('ship-it', 1)  # where the rocket stands in ship-it's frame 2
+ROCKET_BACK = (_X['ship-it'] + (_B[0] + _B[2]) / 2, GROUND.y(_X['ship-it']) + (_B[1] + _B[3]) / 2)
+MERGED_CONFETTI = [(at('lgtm', 5), fx.confetti_burst(9, _X['lgtm'] + 60, GROUND.y(_X['lgtm']) - 520, 40, 0.9))]
 END_WORDS = [letters.BubbleWord(word, SAFE_X, SAFE[1] + 200 + 170 * k, max_width=SAFE_W, cell=8, palette='gold') for k, word in enumerate(('HAPPY', 'CODING!'))]
 
 
@@ -365,6 +372,8 @@ def render(t: float) -> Image.Image:
 	rocket_off(img, t, cx)
 	for (tp, px, py) in POPS:
 		fx.sparkle_ring(img, t, tp, px, py, cx, 0, n=6, radius=110, inner=30, life=0.3, color=(255, 255, 255, 255))
+	fx.sparkle_ring(img, t, at('ship-it', 2), *ROCKET_BACK, cx, 0, n=8, radius=190, inner=100, life=0.35)  # the rocket it built is back
+	fx.confetti(img, t, MERGED_CONFETTI, cx, 0)
 	fx.dust(img, t, LANDINGS, cx, 0, color=land.lit('#f3ead2', light))
 	if t >= T_ASLEEP:
 		fx.zzz(img, t - T_ASLEEP, END_X + 170, _input_box(END_X)[2] - 250, cx, 0)
@@ -384,7 +393,7 @@ CHORDS = {
 	'G': ['G2', 'B3', 'D4', 'G4'], 'Dm': ['D3', 'F3', 'A3', 'D4'], 'E': ['E2', 'G#3', 'B3', 'E4'],
 }
 B_TROUBLE = round(START['debug'] * 2)       # sections start on the beat of their first stop
-B_TRIUMPH = round(START['magic'] * 2)
+B_TRIUMPH = round(START['lgtm'] * 2)
 B_EVENING = round(START['cowboy'] * 2)
 B_NIGHT = round(T_HOME * 2)
 SECTIONS = [  # (first beat, last beat, chords per 4 beats, melody, instrument)
@@ -449,6 +458,17 @@ def sound_effects(mix: A.Mixer) -> None:
 	for frame in (5, 8):                                                      # squeak!
 		put(A.sweep(1400, 2300, 0.12, duty=0.25), at('rubber-duck', frame), 0.14, pan=0.4)
 	put(A.boing(), at('rubber-duck', 6), 0.14)                                # jumps in surprise
+	for frame, part in ((2, 'fins'), (4, 'body'), (6, 'nose')):              # the rocket's parts drop in ...
+		put(A.sweep(1400, 500, 0.1, 'tri') * 0.6, at('build', frame), 0.07, pan=0.4)
+		put(A.click(0.9 if part == 'fins' else 1.1 if part == 'body' else 1.3, 1.0), at('build', frame + 1), 0.22, pan=0.4)  # ... click!
+	put(A.land(), at('build', 3), 0.16, pan=0.4)
+	put(A.blip(n('E6'), 0.06), at('build', 5), 0.06, pan=0.4)
+	put(A.blip(n('G6'), 0.08), at('build', 7), 0.07, pan=0.4)
+	put(A.sweep(500, 1200, 0.18, 'sine'), at('build', 8), 0.10, pan=0.4)    # the window lights up
+	put(A.boing(), at('build', 9), 0.12)                                      # a hop for joy
+	put(A.twinkle(['C6', 'E6', 'G6', 'C7']), at('build', 11), 0.11, pan=0.3)  # ta-da!
+	put(A.sweep(300, 1500, 0.08, 'sine'), at('build', 14), 0.10, pan=0.4)   # pop
+	put(A.twinkle(['G6', 'C7', 'E7']), at('build', 15), 0.06, pan=0.4)
 	for frame in (2, 3):                                                      # the bug scuttles in
 		put(A.click(1.8, 0.5), at('debug', frame), 0.10, pan=0.6)
 	put(A.blip(n('E6'), 0.1), at('debug', 4), 0.10, pan=0.5)                  # "!": it spots the bug
@@ -462,11 +482,14 @@ def sound_effects(mix: A.Mixer) -> None:
 	put(A.crash(0.25), at('zapped', 6), pan=-0.1)
 	put(A.sweep(95, 120, 0.3, duty=0.5), at('zapped', 7), 0.10)              # electrified buzz
 	put(A.noise_burst(0.3, 1500, 8), at('zapped', 11), 0.12)                 # a puff of smoke
-	put(A.sweep(400, 1300, 0.25, 'tri'), at('magic', 2), 0.10)               # the wand goes up
-	put(A.whoosh(0.2), at('magic', 4), 0.16)                                  # swish
-	put(A.twinkle(['C6', 'E6', 'G6', 'B6', 'D7']), at('magic', 5), 0.13)     # stars
+	put(A.boing(), at('lgtm', 4), 0.12)                                       # a happy hop ...
+	put(A.blip(n('C6'), 0.06), at('lgtm', 4), 0.10)                          # ... the check pops in ...
+	put(A.bell(n('G6'), 0.8), at('lgtm', 5), 0.10)                            # ... ding: merged
+	put(A.land(), at('lgtm', 6), 0.16)                                        # lands
+	put(A.twinkle(['C7', 'E7', 'G7']), at('lgtm', 8), 0.09)
 	put(A.noise_burst(0.5, 90, 3), at('ship-it', 3), 0.16, pan=0.4)          # engines rumble
 	put(A.sweep(200, 1600, 0.6, curve=2.0), at('ship-it', 5), 0.12, pan=0.4)  # lift-off
+	put(A.twinkle(['E6', 'G6', 'C7']), at('ship-it', 2), 0.06, pan=0.4)      # the rocket it built is back
 	put(A.whoosh(0.35), at('ship-it', 6), 0.16, pan=0.4)
 	put(A.land(), at('cowboy', 3), 0.20)                                      # hat on
 	for frame in (4, 6, 8):                                                   # lasso twirls

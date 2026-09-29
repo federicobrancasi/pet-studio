@@ -105,6 +105,7 @@ closest one before drawing your own:
 | --- | --- |
 | `yes` | pop a word in above the head: small, big, settled |
 | `idea` | hang a prop above the head and light it up |
+| `build` | drop a prop's parts in one by one beside the pet, then present it |
 | `ship-it` | launch a prop from beside the pet and follow it with the eyes |
 | `cowboy` | wear a hat instead of the antennae, and twirl a lasso with one |
 | `rubber-duck` | squash a prop and react with a hop |

@@ -3,7 +3,7 @@
 	"about": "Approves your pull request with a hop and a green check.",
 	"loop": false,
 	"frameWidth": 96,
-	"frameHeight": 128,
+	"frameHeight": 160,
 	"frameDurations": [
 		150,
 		90,
@@ -22,51 +22,51 @@
 		null,
 		null,
 		[
-			40,
-			8,
-			72,
-			32
-		],
-		[
+			48,
 			24,
-			0,
-			80,
-			32
-		],
-		[
-			24,
-			0,
-			80,
-			32
-		],
-		[
-			24,
-			0,
 			88,
-			32
+			56
+		],
+		[
+			24,
+			0,
+			96,
+			56
+		],
+		[
+			24,
+			0,
+			96,
+			56
+		],
+		[
+			24,
+			0,
+			96,
+			56
 		],
 		[
 			16,
 			0,
-			80,
-			32
+			96,
+			56
 		],
 		[
-			40,
-			8,
-			72,
-			32
+			48,
+			16,
+			80,
+			40
 		],
 		null
 	],
 	"files": {
 		"stable": {
-			"spritesheet": "buddy-lgtm-stable-128.spritesheet.png",
-			"static": "buddy-lgtm-stable-128.png"
+			"spritesheet": "buddy-lgtm-stable-160.spritesheet.png",
+			"static": "buddy-lgtm-stable-160.png"
 		},
 		"insiders": {
-			"spritesheet": "buddy-lgtm-insiders-128.spritesheet.png",
-			"static": "buddy-lgtm-insiders-128.png"
+			"spritesheet": "buddy-lgtm-insiders-160.spritesheet.png",
+			"static": "buddy-lgtm-insiders-160.png"
 		}
 	}
 }

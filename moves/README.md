@@ -7,6 +7,7 @@ yours, see the main [README](../README.md#teach-the-pet-a-new-move).
 | Move | What it does | Preview |
 | --- | --- | --- |
 | [`angry`](angry/move.txt) | The pet flies into a rage: it shakes, turns deep red, steam blasts from its antennae and GRR! flashes, then it slowly cools down. | ![angry in Stable and Insiders colors](angry/preview.png) |
+| [`build`](build/move.txt) | Builds a little rocket: the fins, the body and the nose cone drop into place one by one, its window lights up, and the pet hops for joy. | ![build in Stable and Insiders colors](build/preview.png) |
 | [`coffee`](coffee/move.txt) | A steaming mug of coffee appears in front of it; the pet breathes in the aroma and closes its eyes, blissful. | ![coffee in Stable and Insiders colors](coffee/preview.png) |
 | [`cowboy`](cowboy/move.txt) | Puts on a cowboy hat, twirls a lasso over its head with one antenna, throws it, and tips its hat. | ![cowboy in Stable and Insiders colors](cowboy/preview.png) |
 | [`debug`](debug/move.txt) | A bug crawls up; the pet raises a big hammer with its antenna and smashes it flat, right on top. Bug fixed! | ![debug in Stable and Insiders colors](debug/preview.png) |

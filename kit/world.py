@@ -664,13 +664,16 @@ def panel(img: Image.Image, x0: float, y0: float, x1: float, y1: float, fill: tu
 def say(img: Image.Image, text: str, center_x: float, bottom: float, tail_x: float, px: int = TP, reveal: float = 1.0) -> tuple:
 	"""A white speech bubble with ``text`` whose tail hangs below it at ``tail_x`` (screen space).
 
-	``bottom`` is the bubble's bottom edge; the tail adds 3 cells below it, so keep it clear of
-	the pet's antennae. ``reveal`` from 0 to 1 types the text in. Returns the bubble's box.
+	``text`` may have several lines (split on ``\\n``). ``bottom`` is the bubble's bottom edge; the
+	tail adds 3 cells below it, so keep it clear of the pet's antennae. ``reveal`` from 0 to 1
+	types the text in. Returns the bubble's box.
 	"""
 	cell = TP
-	w = snap(text_width(text, px) + 8 * cell, cell)
-	h = snap(7 * px + 6 * cell, cell)
-	x0, y0 = snap(center_x - w / 2, cell), snap(bottom - h, cell)
+	lines = text.split('\n')
+	w = snap(max(text_width(line, px) for line in lines) + 8 * cell, cell)
+	h = snap(7 * px + (len(lines) - 1) * 11 * px + 6 * cell, cell)
+	x0 = snap(center_x - w / 2, cell)
+	y0 = snap(bottom, cell) - h  # the bottom stays put, however many lines there are
 	panel(img, x0, y0, x0 + w, y0 + h, WHITE, INK, cell)
 	tx = snap(tail_x, cell)
 	fill_rect(img, tx, y0 + h - cell, 3 * cell, cell, WHITE)  # open the border where the tail joins
@@ -679,8 +682,11 @@ def say(img: Image.Image, text: str, center_x: float, bottom: float, tail_x: flo
 		fill_rect(img, tx - cell, yy, (wc + 2) * cell, cell, INK)
 		fill_rect(img, tx, yy, wc * cell, cell, WHITE)
 	fill_rect(img, tx - cell, y0 + h + 3 * cell, 2 * cell, cell, INK)
-	shown = text[:max(0, min(len(text), int(round(len(text) * reveal))))]
-	draw_text(img, x0 + 4 * cell, y0 + 3 * cell, shown, INK, px)
+	left = max(0, min(len(text), int(round(len(text) * reveal))))
+	for k, line in enumerate(lines):
+		shown = line[:max(0, left)]
+		left -= len(line) + 1
+		draw_text(img, x0 + 4 * cell, y0 + 3 * cell + k * 11 * px, shown, INK, px)
 	return x0, y0, x0 + w, y0 + h
 
 

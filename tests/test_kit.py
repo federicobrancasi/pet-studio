@@ -106,7 +106,7 @@ class MovesTest(unittest.TestCase):
 	def test_used_move_plays_like_a_state(self) -> None:
 		moves.use('lgtm')
 		image, _, _ = P.pet_frame('lgtm', 7, facing='left')
-		self.assertEqual(image.size, (96 * 2, 128 * 2))
+		self.assertEqual(image.size, (96 * 2, 160 * 2))  # 12 x 20 logical pixels: the check sits above the head
 
 	def test_montage_plays_every_move_at_its_own_timing(self) -> None:
 		frames, durations = moves.montage(['yes', 'wave', 'cowboy'], cols=2)
@@ -176,9 +176,11 @@ class WorldsTest(unittest.TestCase):
 		img = Image.new('RGBA', (1080, 1920))
 		x0, y0, x1, y1 = layout.safe_area(img.size)
 		box = world.say(img, "HI, I'M HERE!", (x0 + x1) // 2, 900, 500)
+		two = world.say(Image.new('RGBA', (1080, 1920)), "HI, I'M HERE!\nAND HERE!", (x0 + x1) // 2, 900, 500)
 		bottom = world.caption(img, 'a caption long enough that it has to wrap', y0 + 40, (x0 + x1) // 2, x1 - x0)
 		left, top, right, _ = img.getbbox()
-		self.assertEqual((left >= x0 - 12, right <= x1 + 12, top >= y0 + 30, bottom < box[1], box[2] <= x1), (True, True, True, True, True))
+		self.assertEqual((left >= x0 - 12, right <= x1 + 12, top >= y0 + 30, bottom < box[1], box[2] <= x1, (two[0], two[2], two[3]) == (box[0], box[2], box[3]), two[1] < box[1]),
+			(True, True, True, True, True, True, True))
 
 
 class FilmTest(unittest.TestCase):

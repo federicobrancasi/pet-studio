@@ -76,6 +76,8 @@ the film with `moves.use('<name>')`. `moves/` already has ready-made moves, such
 
 Reuse routines from the examples instead of rewriting them, but not their worlds or beats:
 - `examples/coding-world/film.py` is a complete 30 s film in a world of code.
+- `examples/boss-fight/film.py` is a 9:16 reel told as a retro game: a boss drawn on the pet's
+  grid, a HUD, banners on the beat, and both pets playing together.
 - `examples/pet-day/film.py` is a 9:16 reel: the pet travels through its day, from a sunny
   meadow to a starry night, stopping to play the ready-made moves.
 - `lgtm-poster`, `ship-it` and `sticker-pack` are stills.

@@ -45,9 +45,15 @@ Code, and ask. The `pet-studio` skill loads by itself.
 through its coding day, from a sunny meadow to a starry night: it builds a rocket, fixes a bug,
 survives a merge conflict and ships it, all with the ready-made moves.
 Its captions stay inside the area that Reels, TikTok and Shorts leave clear
-([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.3)).
+([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4)).
 
-<img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night">
+[`boss-fight`](examples/boss-fight/): a 20 s reel that tells "POV: the bug only happens in prod"
+as a retro boss fight. Both pets team up against a giant bug, and it ends on a question for the
+comments ([MP4 with sound](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.4)).
+
+| | |
+| --- | --- |
+| <img src="docs/media/pet-day.gif" width="270" alt="A day in the life of the VS Code pet: a clock and a caption at the top, the pet hopping from stop to stop through a landscape as the sky goes from morning to night"> | <img src="docs/media/boss-fight.gif" width="270" alt="Boss fight: a giant bug boss with a health bar over the tiny VS Code pet in a server room; the pet dodges, gets zapped, finds the weak spot with a rubber duck, and stomps the boss with the Insiders pet"> |
 
 **Images.** One file renders every preset:
 

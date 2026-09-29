@@ -217,11 +217,12 @@ def poof(img: Image.Image, t: float, t0: float, x: float, y: float, cx: float, c
 GOLD = hexc('#ffd35c')
 
 
-def flash(img: Image.Image, t: float, t0: float, length: float = 0.22, color: tuple = (255, 250, 235)) -> None:
-	"""One full-screen flash at ``t0`` that fades out: good for hiding a cut. Never strobe it."""
+def flash(img: Image.Image, t: float, t0: float, length: float = 0.22, color: tuple = (255, 250, 235), strength: float = 1.0) -> None:
+	"""One full-screen flash at ``t0`` that fades out: good for hiding a cut, or, with a lower
+	``strength`` (0.3-0.5), for punching up a hit without whiting out the frame. Never strobe it."""
 	dt = t - t0
 	if 0 <= dt < length:
-		a = int(235 * (1 - dt / length) ** 1.6)
+		a = int(235 * strength * (1 - dt / length) ** 1.6)
 		img.alpha_composite(Image.new('RGBA', img.size, color[:3] + (a,)))
 
 

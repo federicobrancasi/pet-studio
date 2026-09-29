@@ -42,6 +42,7 @@ show the mechanics, not the world to reuse.
 | about code: a bug, a merge, a deploy | a city or a stairway of code | `world.CodeCity`, `world.CodeLine`, `world.terminal_panel` |
 | a day, a trip, a season | a landscape through the hours: meadow, field, desert | `land.Ground` with biomes, `land.Ridge`, `land.prop`, `sky.day_keys`, `sky.day_light` |
 | a big moment, a wish, a reveal | the clouds at sunset, then the stars | `sky.gradient`, `sky.CloudPlatform`, `sky.rays`, `letters.BubbleWord` |
+| a dev joke, a challenge, a versus | a retro game: a boss, a HUD, banners and power-ups | see `examples/boss-fight` |
 | anything else | the beach, space, snow, underwater, a candy land, inside a computer | the pieces above, new props as letter grids (`draw.grid_sprite`) |
 
 - **Vary the look.** Choose a palette, a time of day and a way of travelling (hops, a climb, a
@@ -105,7 +106,7 @@ def render(t):
   `world.typed` with `world.chat_input` or `world.code('...', appear=t0, step=0.1)` for typing.
 - **Celebration:** the `press` state, `fx.confetti` and `fx.fireworks`, or `world.terminal_panel`.
 - **A reveal:** `fx.flash` hides a cut, `sky.rays` turn behind it and `fx.sparkle_ring` bursts
-  around it.
+  around it. For a hit, a partial flash (`strength=0.4`) punches it up without whiting out.
 - **A friend arrives:** `fx.respawn`, then `falling` and `splat`.
 - **Talking:** `world.say` draws a speech bubble with text; the `rendering` state keeps the
   pet's live eyes while it talks.

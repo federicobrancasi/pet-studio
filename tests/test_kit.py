@@ -169,6 +169,16 @@ class WorldsTest(unittest.TestCase):
 		big = draw.zoom(img, 0, 0, 2)
 		self.assertEqual((big.size, [big.getpixel(xy) for xy in ((2, 2), (3, 3), (4, 4))]), ((8, 6), [(255, 0, 0), (255, 0, 0), (0, 0, 0)]))
 
+	def test_partial_flash_is_weaker_and_only_at_its_time(self) -> None:
+		from PIL import Image
+		from kit import fx
+
+		def lit(t: float, strength: float) -> int:
+			img = Image.new('RGBA', (4, 4), (0, 0, 0, 255))
+			fx.flash(img, t, 1.0, 0.2, (255, 255, 255), strength=strength)
+			return img.getpixel((0, 0))[0]
+		self.assertEqual((lit(0.9, 1.0), lit(1.0, 1.0) > lit(1.0, 0.4) > 0, lit(1.3, 1.0)), (0, True, 0))
+
 	def test_captions_and_bubbles_stay_inside_the_safe_area(self) -> None:
 		from PIL import Image
 		from kit import layout, world

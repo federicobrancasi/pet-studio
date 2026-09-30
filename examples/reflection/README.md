@@ -8,7 +8,7 @@ FROM INSIDERS! I GET EVERY UPDATE FIRST." The end card asks: which team are you?
 
 <img src="../../docs/media/reflection.gif" width="270" alt="The reel: at a night pond, the blue pet's reflection moves before it does, glitches green and leaps out of the water: it's the green Insiders pet, in sunglasses">
 
-- **Watch:** the MP4 (with sound) is on the [v1.5 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5).
+- **Watch:** the MP4 (with sound) is on the [v1.5.1 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5.1).
 - **Rebuild:** `python3 -m kit film review reflection` (the MP4 and its review package, with
   `safe-zones.png`).
 

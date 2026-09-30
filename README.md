@@ -44,7 +44,7 @@ Code, and ask. The `pet-studio` skill and its reviewer load by themselves from
 
 **Vertical reels.** 9:16 for Reels, TikTok, Shorts and X, with every caption inside the area the
 apps leave clear. Each name links to how it's built, and the MP4s with sound are on the
-[v1.5 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5).
+[v1.5.1 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5.1).
 
 | | |
 | --- | --- |

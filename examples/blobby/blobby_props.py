@@ -298,13 +298,6 @@ def outlined_text(img: Image.Image, text: str, x: float, y: float, px: int, colo
 	draw_text(img, x, y, text, color, px)
 
 
-def fit_px(text: str, max_width: float, largest: int) -> int:
-	px = largest
-	while px > 3 and text_width(text, px) > max_width:
-		px -= 1
-	return px
-
-
 def rounded_panel(img: Image.Image, x0: float, y0: float, x1: float, y1: float, fill: tuple, border: tuple | None = None, cell: int = 8) -> None:
 	"""A rectangle with its corners cut by one cell, optionally with a one-cell border."""
 	x0, y0, x1, y1 = snap(x0, cell), snap(y0, cell), snap(x1, cell), snap(y1, cell)

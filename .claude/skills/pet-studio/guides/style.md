@@ -67,7 +67,7 @@ This is an unofficial fan project, so follow https://code.visualstudio.com/brand
 
 - Give the pet another name, a nickname or a backstory, or present fan content as an official
   announcement. (The `blobby` example celebrates the real naming contest; don't reuse its
-  winner credit or prize.)
+  credit panel or prize.)
 - Show the pet really hurt, sad for long, or unkind. Cartoon mishaps it bounces back from,
   such as a zap or a GRR!, are fine.
 - Use real people, other companies' mascots, or copyrighted characters, music or art.

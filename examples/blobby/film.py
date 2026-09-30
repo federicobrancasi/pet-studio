@@ -3,16 +3,15 @@
 The community named the pet. A golden envelope with the winning name drifts down to the pet, a
 gust steals it, and the pet chases it up a sunset sky from cloud to cloud (with one jelly splat
 it bounces back from). A spring cloud launches it into dusk, it catches the envelope, and BLOBBY
-bursts out. It hops along its new name, one note per letter, the winner is credited, it says
-hello in a close-up, and the end card shows everything at once.
+bursts out. It hops along its new name, one note per letter, a panel credits everyone who sent
+the name in (NAMED BY YOU!, with the prize and a note that the winners will be contacted), it
+says hello in a close-up, and the end card shows everything at once.
 
 It shows how to make a reveal: a chase up a world taller than the screen with a camera that
 follows (blobby_world.py), a prop that keeps getting away, a flash that bursts into a
 bubble-letter logo drawn on a character grid (blobby_props.py), hops that land on the beat and
 play one note per letter, a 2x close-up cropped from the same frame, and an end card that pulls
 back.
-
-The winner's handle is a placeholder: set ``WINNER`` below and re-render.
 
     python3 -m kit film sheet blobby
     python3 -m kit film review blobby
@@ -55,10 +54,10 @@ moves.use('wave')
 # Words: change them here
 
 NAME = 'BLOBBY'
-WINNER = '@userwinner'  # placeholder: put the winner's TikTok handle here, then re-render
 HOOK = ('YOU NAMED', 'ME!')
-CREDIT = 'NAMED BY'
-PRIZE = ('WINS 1 MONTH OF', 'GITHUB COPILOT MAX!')
+CREDIT = ('NAMED BY', 'YOU!')  # many people sent in the winning name, so the credit names no one
+PRIZE = ('PRIZE: 1 MONTH OF', 'GITHUB COPILOT MAX!')
+NOTE = "WE'LL REACH OUT!"  # to the winners
 HELLO = "HI, I'M BLOBBY!"
 
 # --------------------------------------------------------------------------------------------
@@ -422,13 +421,13 @@ def draw_credit(img: Image.Image, t: float) -> None:
 		return
 	rise = (1 - ease_out_back(seg(t, T_CREDIT, T_CREDIT + 0.3))) * 360
 	top = max(1048, 1072 + snap(rise, 8))  # a small overshoot that never touches the name
-	BP.rounded_panel(img, SAFE[0] + 30, top, SAFE[2] - 30, top + 376, (27, 20, 64, 215), BP.GOLD)
-	BP.text_centered(img, CREDIT, SAFE_X, top + 32, 7, hexc('#d9d0ff'))
-	hp = BP.fit_px(WINNER, SAFE[2] - SAFE[0] - 120, 10)
-	BP.text_centered(img, WINNER, SAFE_X, top + 32 + 49 + 24, hp, BP.GOLD)
+	BP.rounded_panel(img, SAFE[0] + 30, top, SAFE[2] - 30, top + 440, (27, 20, 64, 215), BP.GOLD)
+	BP.text_centered(img, CREDIT[0], SAFE_X, top + 32, 7, hexc('#d9d0ff'))
+	BP.text_centered(img, CREDIT[1], SAFE_X, top + 110, 12, BP.GOLD)
 	if t >= T_PRIZE:
-		BP.text_centered(img, PRIZE[0], SAFE_X, top + 32 + 49 + 24 + 90 + 28, 7, BP.WHITE)
-		BP.text_centered(img, PRIZE[1], SAFE_X, top + 32 + 49 + 24 + 90 + 28 + 49 + 16, 7, BP.GOLD)
+		BP.text_centered(img, PRIZE[0], SAFE_X, top + 223, 7, BP.WHITE)
+		BP.text_centered(img, PRIZE[1], SAFE_X, top + 288, 7, BP.GOLD)
+		BP.text_centered(img, NOTE, SAFE_X, top + 360, 7, hexc('#d9d0ff'))
 
 
 def render_wide(t: float, closeup: bool = False) -> Image.Image:

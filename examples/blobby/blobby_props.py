@@ -1,5 +1,5 @@
-"""Props for the Blobby reel: the golden envelope, the bubble-letter name logo, the credit panel,
-the speech bubble and the reveal flash.
+"""Props for the Blobby reel: the golden envelope, the bubble-letter name logo, the speech
+bubbles and the reveal flash.
 
 Every prop is drawn from a character grid at a whole-pixel cell size, so it matches the pet.
 """
@@ -19,6 +19,7 @@ NAVY = hexc('#14103a')
 INK = hexc('#1b1440')
 GOLD = hexc('#ffd35c')
 WHITE = hexc('#ffffff')
+LINE_PITCH = 11  # a speech bubble's line spacing, in pixels of its text size (7 for the letters, 4 for the gap)
 
 # --------------------------------------------------------------------------------------------
 # The envelope
@@ -279,12 +280,7 @@ class Logo:
 
 
 # --------------------------------------------------------------------------------------------
-# Text: the hook, the credit panel and the speech bubble
-
-
-def text_centered(img: Image.Image, text: str, cx: float, y: float, px: int, color: tuple, shadow: tuple | None = NAVY) -> None:
-	x = snap(cx - text_width(text, px) / 2, 2)
-	draw_text(img, x, int(y), text, color, px, shadow=shadow, shadow_offset=1)
+# Text: the hook and the speech bubbles
 
 
 def outlined_text(img: Image.Image, text: str, x: float, y: float, px: int, color: tuple, outline: tuple = NAVY, width: int = 8) -> None:
@@ -310,12 +306,13 @@ def rounded_panel(img: Image.Image, x0: float, y0: float, x1: float, y1: float, 
 
 
 def speech_bubble(img: Image.Image, text: str, cx: float, bottom: float, tail_x: float, px: int = 8, reveal: float = 1.0) -> None:
-	"""A white pixel speech bubble whose tail hangs below it at ``tail_x``; text types in with ``reveal``."""
+	"""A white pixel speech bubble whose tail hangs below it at ``tail_x``. ``text`` may have
+	several lines (split on ``\\n``); the bottom stays put, and the text types in with ``reveal``."""
 	cell = 8
-	tw = text_width(text, px)
+	lines = text.split('\n')
 	pad_x, pad_y = 4 * cell, 3 * cell
-	w = snap(tw + 2 * pad_x, cell)
-	h = snap(7 * px + 2 * pad_y, cell)
+	w = snap(max(text_width(line, px) for line in lines) + 2 * pad_x, cell)
+	h = snap(7 * px + (len(lines) - 1) * LINE_PITCH * px + 2 * pad_y, cell)
 	x0 = snap(cx - w / 2, cell)
 	y0 = snap(bottom - h, cell)
 	rounded_panel(img, x0, y0, x0 + w, y0 + h, WHITE, INK, cell)
@@ -326,8 +323,11 @@ def speech_bubble(img: Image.Image, text: str, cx: float, bottom: float, tail_x:
 		fill_rect(img, tx - cell, yy, (wc + 2) * cell, cell, INK)
 		fill_rect(img, tx, yy, wc * cell, cell, WHITE)
 	fill_rect(img, tx - cell, y0 + h + 3 * cell, 2 * cell, cell, INK)
-	shown = text[:max(0, min(len(text), int(round(len(text) * reveal))))]
-	draw_text(img, x0 + pad_x, y0 + pad_y, shown, INK, px)
+	left = max(0, min(len(text), int(round(len(text) * reveal))))
+	for k, line in enumerate(lines):  # each line centered; typing fills it from its left edge
+		lx = x0 + (w - text_width(line, px)) // 2
+		draw_text(img, lx, y0 + pad_y + k * LINE_PITCH * px, line[:left], INK, px)
+		left = max(0, left - len(line) - 1)
 
 
 def flash(img: Image.Image, t: float, t0: float, length: float = 0.22) -> None:

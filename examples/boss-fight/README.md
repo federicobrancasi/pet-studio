@@ -8,7 +8,7 @@ bug, it's a feature.
 
 <img src="../../docs/media/boss-fight.gif" width="270" alt="The reel: a giant bug boss with a health bar over the tiny VS Code pet in a server room; the pet dodges, gets zapped, finds the weak spot with a rubber duck, and stomps the boss with the Insiders pet">
 
-- **Watch:** the MP4 (with sound) is on the [v1.5.1 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5.1).
+- **Watch:** the MP4 (with sound) is on the [v1.5.2 release](https://github.com/federicobrancasi/pet-studio/releases/tag/v1.5.2).
 - **Rebuild:** `python3 -m kit film review boss-fight` (the MP4 and its review package, with
   `safe-zones.png`).
 

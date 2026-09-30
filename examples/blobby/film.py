@@ -3,15 +3,15 @@
 The community named the pet. A golden envelope with the winning name drifts down to the pet, a
 gust steals it, and the pet chases it up a sunset sky from cloud to cloud (with one jelly splat
 it bounces back from). A spring cloud launches it into dusk, it catches the envelope, and BLOBBY
-bursts out. It hops along its new name, one note per letter, a panel credits everyone who sent
-the name in (NAMED BY YOU!, with the prize and a note that the winners will be contacted), it
-says hello in a close-up, and the end card shows everything at once.
+bursts out. It hops along its new name, one note per letter, and then speaks its first words
+with it: HI, I'M BLOBBY! (and a wave), THANK YOU FOR MY NAME! in a close-up (its antennae curl
+into a heart), and HAPPY CODING! on the end card.
 
 It shows how to make a reveal: a chase up a world taller than the screen with a camera that
 follows (blobby_world.py), a prop that keeps getting away, a flash that bursts into a
 bubble-letter logo drawn on a character grid (blobby_props.py), hops that land on the beat and
-play one note per letter, a 2x close-up cropped from the same frame, and an end card that pulls
-back.
+play one note per letter, a pet that talks in speech bubbles, a 2x close-up cropped from the
+same frame, and an end card that pulls back.
 
     python3 -m kit film sheet blobby
     python3 -m kit film review blobby
@@ -55,10 +55,9 @@ moves.use('wave')
 
 NAME = 'BLOBBY'
 HOOK = ('YOU NAMED', 'ME!')
-CREDIT = ('NAMED BY', 'YOU!')  # many people sent in the winning name, so the credit names no one
-PRIZE = ('PRIZE: 1 MONTH OF', 'GITHUB COPILOT MAX!')
-NOTE = "WE'LL REACH OUT!"  # to the winners
 HELLO = "HI, I'M BLOBBY!"
+THANKS = 'THANK YOU FOR\nMY NAME!'
+SIGNOFF = 'HAPPY CODING!'
 
 # --------------------------------------------------------------------------------------------
 # Timeline (seconds). Big moments sit on beats: the first landing on bar 2, the reveal on bar 4.
@@ -79,14 +78,20 @@ T_LETTER_STEP = 0.05          # the letters fly out one after another
 T_LETTER_FLIGHT = 0.16
 LETTER_LANDS = [6.5 + 0.5 * i for i in range(len(NAME))]  # the pet lands on each letter on a beat
 T_JOY = (LETTER_LANDS[-1] + 0.1, LETTER_LANDS[-1] + 0.6)   # a big happy jump to the middle
-T_CREDIT = 9.5
-T_PRIZE = 9.95
-T_CLOSEUP = 12.5
-T_TALK = 12.62                # it says its name: the bubble types in over four babble syllables
-SYLLABLES = [T_TALK + d for d in (0.0, 0.14, 0.3, 0.48)]
-T_WAVE = 13.25
+# Then it talks, three short lines: each bubble types in over babble syllables while the pet
+# squashes once per syllable.
+T_HELLO = 9.9                 # standing on its name: HI, I'M BLOBBY!
+HELLO_SYLLABLES = [T_HELLO + d for d in (0.0, 0.14, 0.3, 0.48)]
+T_WAVE = 10.6                 # ... and it waves
+T_CLOSEUP = 12.0              # the close-up, on the bar
+T_THANKS = 12.12              # THANK YOU FOR MY NAME!
+THANKS_SYLLABLES = [T_THANKS + d for d in (0.0, 0.13, 0.26, 0.42, 0.6)]
+T_LOVE = 12.84                # right after the typing: its antennae curl into a heart (the pet's own love reaction) ...
+LOVE_SPEED = 1.5              # ... played a little faster, so the heart holds before the cut
+T_HEART = T_LOVE + sum(P.durations('love')[:-1]) / 1000 / LOVE_SPEED  # the heart is whole
 T_PULLBACK = 14.0             # cut back to the whole name for the end card (and the loop point)
-T_BYE = 14.1                  # a second wave, goodbye
+SIGNOFF_SYLLABLES = [T_PULLBACK + d for d in (0.02, 0.14, 0.26, 0.38)]  # HAPPY CODING!
+T_BYE = 14.48                 # a goodbye wave
 
 CUES = [
 	(0.0, 'hook: YOU NAMED ME! and the envelope'),
@@ -100,10 +105,11 @@ CUES = [
 	(T_REVEAL, 'reveal: BLOBBY'),
 	(LETTER_LANDS[0], 'letter hop'),
 	(T_JOY[0], 'joy jump'),
-	(T_CREDIT, 'credit'),
-	(T_CLOSEUP, "close-up: HI, I'M BLOBBY!"),
-	(T_WAVE, 'wave'),
-	(T_PULLBACK, 'end card: the whole name, the credit and the hello'),
+	(HELLO_SYLLABLES[-1] + 0.2, "HI, I'M BLOBBY!"),
+	(T_WAVE + 0.5, 'wave'),
+	(THANKS_SYLLABLES[-1] + 0.2, 'close-up: THANK YOU FOR MY NAME!'),
+	(T_HEART + 0.1, 'its antennae make a heart'),
+	(T_PULLBACK + 0.2, 'end card: BLOBBY and HAPPY CODING!'),
 ]
 
 # --------------------------------------------------------------------------------------------
@@ -124,7 +130,7 @@ H1 = Hop(*T_H1, *START, C1.x, C1.top, 300)
 LUNGE = Hop(*T_LUNGE, C1.x, C1.top, C2.x, C2.top, 380, recover=False)
 H3 = Hop(*T_H3, C2.x, C2.top, SPRING.x, SPRING.top, 250, recover=False)
 CHASE_HOPS = [WIGGLE, H1, H3]
-BLINKS = [0.25, 3.55, 9.9, 11.4, 12.25, 14.2]
+BLINKS = [0.25, 3.55, 13.75]
 
 # The envelope's flight: (t, x, y) keys through a Catmull-Rom spline.
 ENVELOPE_KEYS = [
@@ -359,6 +365,14 @@ def standing_letter(t: float) -> int | None:
 	return idx
 
 
+def talk_pose(t: float, syllables: list, x: float, y: float, blink: bool) -> PetPose:
+	"""Talking: the pet's own "thinking" state (live eyes, bouncing antennae) with a little
+	squash on every syllable."""
+	if any(ts <= t < ts + 0.08 for ts in syllables):
+		return PetPose('jump', 1, x, y, 'right')
+	return PetPose('rendering', P.frame_at('rendering', (t - syllables[0]) * 1000), x, y, 'right', gaze=(0, 0), blink=blink)
+
+
 def wide_pose(t: float) -> PetPose:
 	blink = motion.blinking(t, BLINKS)
 	hop = motion.hop_pose(WIDE_HOPS, t, facing='right')
@@ -366,17 +380,17 @@ def wide_pose(t: float) -> PetPose:
 		x, y = CENTER[0], min(letter_top(2, t), letter_top(3, t))
 		if t >= T_BYE:
 			return PetPose('wave', P.frame_at('wave', (t - T_BYE) * 1000, loop=False), x, y, 'right')
-		if t >= T_WAVE:
+		if t >= T_PULLBACK:
+			return talk_pose(t, SIGNOFF_SYLLABLES, x, y, blink)
+		if t >= T_LOVE:
+			return PetPose('love', P.frame_at('love', (t - T_LOVE) * 1000 * LOVE_SPEED, loop=False), x, y, 'right', gaze=(0, 0), blink=blink)
+		if t >= T_THANKS:
+			return talk_pose(t, THANKS_SYLLABLES, x, y, blink)
+		if T_WAVE <= t < T_WAVE + P.total_ms('wave') / 1000:
 			return PetPose('wave', P.frame_at('wave', (t - T_WAVE) * 1000, loop=False), x, y, 'right')
-		if t >= T_TALK:
-			# Talking: the pet's own "thinking" state (live eyes, bouncing antennae) with a
-			# little squash on every syllable.
-			if any(ts <= t < ts + 0.08 for ts in SYLLABLES):
-				return PetPose('jump', 1, x, y, 'right')
-			return PetPose('rendering', P.frame_at('rendering', (t - T_TALK) * 1000), x, y, 'right', gaze=(0, 0), blink=blink)
-		if 9.75 <= t < 11.1 or 11.6 <= t < 12.3:
-			return PetPose('clapping', P.frame_at('clapping', (t - 9.75) * 1000), x, y, 'right', gaze=(0, 2), blink=blink)
-		return PetPose('idleTracking', P.frame_at('idle', t * 1000), x, y, 'right', gaze=(0, 4) if t < T_CLOSEUP else (0, 0), blink=blink)
+		if T_HELLO <= t < T_WAVE:
+			return talk_pose(t, HELLO_SYLLABLES, x, y, blink)
+		return PetPose('idleTracking', P.frame_at('idle', t * 1000), x, y, 'right', gaze=(0, 0), blink=blink)
 	if hop is not None:
 		if hop.frame in (4, 5):  # squash and recover ride the letter's own squash
 			i = standing_letter(t)
@@ -416,18 +430,9 @@ def logo_sparkles(img: Image.Image, t: float) -> None:
 			BP.sparkle(img, LOGO.centers[i] + dx, LOGO.baseline + dy, size, (255, 255, 255, 255))
 
 
-def draw_credit(img: Image.Image, t: float) -> None:
-	if t < T_CREDIT:
-		return
-	rise = (1 - ease_out_back(seg(t, T_CREDIT, T_CREDIT + 0.3))) * 360
-	top = max(1048, 1072 + snap(rise, 8))  # a small overshoot that never touches the name
-	BP.rounded_panel(img, SAFE[0] + 30, top, SAFE[2] - 30, top + 440, (27, 20, 64, 215), BP.GOLD)
-	BP.text_centered(img, CREDIT[0], SAFE_X, top + 32, 7, hexc('#d9d0ff'))
-	BP.text_centered(img, CREDIT[1], SAFE_X, top + 110, 12, BP.GOLD)
-	if t >= T_PRIZE:
-		BP.text_centered(img, PRIZE[0], SAFE_X, top + 223, 7, BP.WHITE)
-		BP.text_centered(img, PRIZE[1], SAFE_X, top + 288, 7, BP.GOLD)
-		BP.text_centered(img, NOTE, SAFE_X, top + 360, 7, hexc('#d9d0ff'))
+def bubble_rise(t: float, t0: float) -> int:
+	"""How far a speech bubble still has to rise as it pops in, just before ``t0``."""
+	return snap((1 - ease_out_back(seg(t, t0 - 0.06, t0 + 0.12))) * 60, 8)
 
 
 def render_wide(t: float, closeup: bool = False) -> Image.Image:
@@ -443,22 +448,28 @@ def render_wide(t: float, closeup: bool = False) -> Image.Image:
 		if s is not None:
 			BP.draw_letter(img, NAME[i], s[0], s[1], s[2], s[3])
 	logo_sparkles(img, t)
-	fx.floating_hearts(img, t, T_JOY[1] + 0.1, CENTER[0] + 150, CENTER[1] - 150, 0, 0, count=5, every=0.14, life=1.0)
+	# Hearts float up beside the pet as it lands, and fade before they reach the hello bubble.
+	fx.floating_hearts(img, t, T_JOY[1] + 0.1, CENTER[0] + 150, CENTER[1] - 40, 0, 0, count=5, every=0.14, life=1.0, rise=160)
+	if T_HEART <= t < T_PULLBACK:  # hearts on both sides of its face once its antennae make one (seen in the close-up)
+		for k, side in enumerate((-1, 1)):
+			fx.floating_hearts(img, t, T_HEART + 0.09 * k, CENTER[0] + side * 150, CENTER[1] - 92, 0, 0, count=2, every=0.35, life=0.9, rise=150, spread=10)
 	P.draw_pose(img, wide_pose(t))
 	fx.dust(img, t, [(tl, LOGO.centers[i], LOGO.top(i)) for i, tl in enumerate(LETTER_LANDS)], 0, 0, color=hexc('#fff4ec'))
 	fx.confetti(img, t, CONFETTI, 0, 0)
 	if closeup:
 		return img
-	draw_credit(img, t)
-	if t >= T_PULLBACK:  # the end card keeps the hello; sparkles first, so they pass behind the bubble
+	bottom = CENTER[1] - 192 - 32  # just above the antennae
+	if T_HELLO - 0.06 <= t < T_CLOSEUP:
+		BP.speech_bubble(img, HELLO, SAFE_X, bottom + bubble_rise(t, T_HELLO), SAFE_X - 40, px=8, reveal=seg(t, T_HELLO, HELLO_SYLLABLES[-1] + 0.1))
+	if t >= T_PULLBACK:  # the end card: sparkles first, so they pass behind the bubble, which pops in whole
 		BP.sparkle_ring(img, t, T_PULLBACK, CENTER[0], CENTER[1] - 96, 0, 0, n=10, radius=300, life=0.5, color=(255, 255, 255, 255), inner=150)
-		BP.speech_bubble(img, HELLO, SAFE_X, CENTER[1] - 192 - 32, SAFE_X - 40, px=8)
+		BP.speech_bubble(img, SIGNOFF, SAFE_X, bottom + bubble_rise(t, T_PULLBACK + 0.06), SAFE_X - 40, px=9)
 	BP.flash(img, t, T_REVEAL)
 	return img
 
 
 # --------------------------------------------------------------------------------------------
-# The close-up: the reveal frame cropped around the pet and doubled, then the speech bubble
+# The close-up: the reveal frame cropped around the pet and doubled, then the thank-you bubble
 
 CROP = (SAFE_X - 270, 180)
 
@@ -468,12 +479,8 @@ def render_closeup(t: float) -> Image.Image:
 	x0, y0 = CROP
 	img = wide.crop((x0, y0, x0 + W // 2, y0 + H // 2)).resize(SIZE, Image.NEAREST)
 	head_y = (CENTER[1] - 192 - y0) * 2
-	if t >= T_WAVE + 0.2:  # hearts first, so they pass behind the bubble
-		fx.floating_hearts(img, t, T_WAVE + 0.2, (CENTER[0] - x0) * 2 + 170, head_y + 60, 0, 0, count=4, every=0.18, life=0.9)
-	pop = ease_out_back(seg(t, T_TALK - 0.06, T_TALK + 0.12))
-	if t >= T_TALK - 0.06:
-		bottom = head_y - 70 + snap((1 - pop) * 60, 8)
-		BP.speech_bubble(img, HELLO, SAFE_X, bottom, SAFE_X - 40, px=9, reveal=seg(t, T_TALK, SYLLABLES[-1] + 0.1))
+	if t >= T_THANKS - 0.06:
+		BP.speech_bubble(img, THANKS, SAFE_X, head_y - 70 + bubble_rise(t, T_THANKS), SAFE_X - 40, px=9, reveal=seg(t, T_THANKS, THANKS_SYLLABLES[-1] + 0.1))
 	return img
 
 
@@ -489,7 +496,15 @@ def render(t: float) -> Image.Image:
 # Score: C major at 120 BPM. Music first, then the sound effects, all on the timeline above.
 
 LETTER_NOTES = ['E5', 'G5', 'C6', 'E6', 'E6', 'G6']  # the B-L-O-B-B-Y tune the pet plays by hopping
-CLAP_TIMES = [t0 + k * 0.68 + off for (t0, t1) in ((9.75, 11.1), (11.6, 12.3)) for k in range(3) for off in (0.2, 0.6) if t0 + k * 0.68 + off < t1]
+# The pet's voice for each line: one short note per syllable.
+HELLO_NOTES = (('C6', 0.09), ('D6', 0.09), ('G5', 0.14), ('E5', 0.24))                  # HI, I'M BLOB-BY!
+THANKS_NOTES = (('E5', 0.09), ('G5', 0.09), ('A5', 0.1), ('G5', 0.12), ('C6', 0.3))      # THANK YOU FOR MY NAME!
+SIGNOFF_NOTES = (('G5', 0.07), ('E5', 0.07), ('G5', 0.07), ('C6', 0.22))                # HAP-PY CO-DING!
+
+
+def babble(mix: A.Mixer, syllables: list, notes: tuple, gain: float = 0.10) -> None:
+	for ts, (nm, d) in zip(syllables, notes):
+		mix.put(A.lead(A.n(nm), d, 0.25, 0.012), ts, gain)
 
 
 def music(mix: A.Mixer) -> None:
@@ -527,25 +542,26 @@ def music(mix: A.Mixer) -> None:
 		put(A.bell(n(LETTER_NOTES[i]), 0.7), tl, 0.12, pan=(i - 2.5) * 0.2)
 		put(A.lead(n(LETTER_NOTES[i]), 0.22, 0.125), tl, 0.045, pan=(i - 2.5) * 0.2)
 	put(A.twinkle(['C7', 'E7', 'G7', 'C8']), T_JOY[0] + 0.05, 0.1)
-	# The credit: a softer groove, the B-L-O-B-B-Y tune again on bells.
-	A.groove(mix, 19, 25, soft=0.6)
-	for i, nm in enumerate(['C3', 'G3', 'A2', 'E3', 'F2', 'C3', 'G2', 'D3', 'C3', 'G3', 'G2', 'B2']):
+	# The hello: a softer groove under the pet's voice, then the bells play the B-L-O-B-B-Y
+	# tune again while it waves, landing on the cut to the close-up.
+	A.groove(mix, 19, 24, soft=0.6)
+	for i, nm in enumerate(['C3', 'G3', 'A2', 'E3', 'F2', 'C3', 'G2', 'D3', 'C3', 'G3']):
 		put(A.bass(n(nm), 0.22), bt(19 + i * 0.5), 0.18)
-	mix.melody([(19.5, .5, 'E5'), (20, .5, 'G5'), (20.5, .5, 'C6'), (21, .5, 'E6'), (21.5, .5, 'E6'), (22, 1.5, 'G6'),
-		(23.5, .5, 'E6'), (24, 1, 'D6')], 0, 'bell', 0.075)
-	# The close-up: the pet says its name over a light groove, then the final chord lands on the
-	# pull-back to the end card.
-	A.groove(mix, 25, 28, soft=0.45)
-	for i, nm in enumerate(['C3', 'G3', 'F3', 'G3', 'C3', 'G3']):
-		put(A.bass(n(nm), 0.2), bt(25 + i * 0.5), 0.16)
-	for ts, (nm, d) in zip(SYLLABLES, (('C6', 0.09), ('D6', 0.09), ('G5', 0.14), ('E5', 0.24))):
-		put(A.lead(n(nm), d, 0.25, 0.012), ts, 0.10)
+	babble(mix, HELLO_SYLLABLES, HELLO_NOTES)
+	mix.melody([(21.5, .5, 'E5'), (22, .5, 'G5'), (22.5, .5, 'C6'), (23, .5, 'E6'), (23.5, .5, 'E6'), (24, 1, 'G6')], 0, 'bell', 0.075)
+	# The close-up: the thank-you over a light groove (C, Am, F, G), then the final chord lands
+	# on the pull-back to the end card, under HAPPY CODING!
+	A.groove(mix, 24, 28, soft=0.45)
+	for i, nm in enumerate(['C3', 'G3', 'A2', 'E3', 'F2', 'C3', 'G2', 'D3']):
+		put(A.bass(n(nm), 0.2), bt(24 + i * 0.5), 0.16)
+	babble(mix, THANKS_SYLLABLES, THANKS_NOTES)
 	for i, nm in enumerate(['C4', 'E4', 'G4', 'C5']):
 		put(A.lead(n(nm), 1.3, 0.125, 0.006), T_PULLBACK + 0.01 * i, 0.05, pan=(i - 1.5) * 0.3)
 	for i, nm in enumerate(['C6', 'E6', 'G6', 'C7']):
 		put(A.bell(n(nm), 1.0), T_PULLBACK + i * 0.08, 0.06, pan=(i - 1.5) * 0.2)
 	put(A.bass(n('C3'), 1.2), T_PULLBACK, 0.22)
-	put(A.crash(0.18), T_PULLBACK, 0.5, pan=-0.1)
+	put(A.crash(0.18), T_PULLBACK, 0.4, pan=-0.1)
+	babble(mix, SIGNOFF_SYLLABLES, SIGNOFF_NOTES)
 
 
 def sound_effects(mix: A.Mixer) -> None:
@@ -586,14 +602,10 @@ def sound_effects(mix: A.Mixer) -> None:
 	for h in WIDE_HOPS:
 		if h is not ENTRY:
 			put(A.boing(), h.t0, 0.07 if h is not JOY else 0.13)
-	put(A.whoosh(0.25), T_CREDIT, 0.14)
-	put(A.coin(), T_CREDIT + 0.12, 0.10)
-	put(A.blip(n('G6'), 0.08), T_PRIZE, 0.09)
-	put(A.blip(n('C7'), 0.12), T_PRIZE + 0.07, 0.09)
-	for i, tc in enumerate(CLAP_TIMES):
-		put(A.noise_burst(0.05, 1800, 60), tc, 0.10, pan=0.2 if i % 2 else -0.2)
-	put(A.blip(n('C7'), 0.05), T_CLOSEUP, 0.06)
+	put(A.blip(n('G6'), 0.05), T_HELLO - 0.06, 0.06)  # the hello bubble pops in
 	put(A.twinkle(['E7', 'G7', 'C8']), T_WAVE + 0.2, 0.07)
+	put(A.blip(n('C7'), 0.05), T_CLOSEUP, 0.06)
+	put(A.twinkle(['C7', 'E7', 'G7', 'C8']), T_HEART, 0.08)  # the heart made of antennae
 	put(A.twinkle(['G7', 'C8']), T_BYE + 0.2, 0.05)
 
 

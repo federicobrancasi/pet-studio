@@ -1,0 +1,29 @@
+{
+	"name": "on-air",
+	"about": "Films with a movie camera on its head; the reels turn and the red record light blinks.",
+	"loop": true,
+	"frameWidth": 120,
+	"frameHeight": 120,
+	"frameDurations": [
+		160,
+		160,
+		160,
+		160,
+		160,
+		160,
+		100,
+		160
+	],
+	"staticFrame": 0,
+	"fixedOrientationBounds": null,
+	"files": {
+		"stable": {
+			"spritesheet": "buddy-on-air-stable-120.spritesheet.png",
+			"static": "buddy-on-air-stable-120.png"
+		},
+		"insiders": {
+			"spritesheet": "buddy-on-air-insiders-120.spritesheet.png",
+			"static": "buddy-on-air-insiders-120.png"
+		}
+	}
+}
